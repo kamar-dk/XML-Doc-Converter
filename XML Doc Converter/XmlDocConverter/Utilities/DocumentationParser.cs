@@ -12,11 +12,13 @@ namespace XmlDocConverter.Utilities
             var classDocs = new List<ClassDocumentation>();
 
             var members = xmlDoc.Descendants("member");
-            var classes = members.Where(m => m.Attribute("name").Value.StartsWith("T:"));
+            var classes = members.Where(m => m.Attribute("name")?.Value.StartsWith("T:") ?? false);
 
             foreach (var classElement in classes)
             {
-                var fullClassName = classElement.Attribute("name").Value.Substring(2);
+                var fullClassName = classElement.Attribute("name")?.Value.Substring(2);
+                if (fullClassName == null) continue;
+
                 var classDoc = new ClassDocumentation
                 {
                     ClassName = fullClassName.Split('.').Last(),
@@ -25,31 +27,39 @@ namespace XmlDocConverter.Utilities
                     Remarks = classElement.Element("remarks")?.Value.Trim()
                 };
 
-                var memberElements = members.Where(m => m.Attribute("name").Value.StartsWith($"M:{fullClassName}."));
+                var memberElements = members.Where(m => m.Attribute("name")?.Value.StartsWith($"M:{fullClassName}.") ?? false);
 
                 foreach (var memberElement in memberElements)
                 {
                     var memberDoc = new MemberDocumentation
                     {
-                        MemberName = memberElement.Attribute("name").Value,
+                        MemberName = memberElement.Attribute("name")?.Value,
                         Summary = memberElement.Element("summary")?.Value.Trim(),
-                        Remarks = memberElement.Element("remarks")?.Value.Trim()
+                        Remarks = memberElement.Element("remarks")?.Value.Trim(),
+                        Returns = memberElement.Element("returns")?.Value.Trim()
                     };
 
-                    var paramsElements = memberElement.Elements("param");
-                    foreach (var paramElement in paramsElements)
+                    foreach (var paramElement in memberElement.Elements("param"))
                     {
-                        memberDoc.Parameters[paramElement.Attribute("name").Value] = paramElement.Value.Trim();
+                        memberDoc.Parameters[paramElement.Attribute("name")?.Value] = paramElement.Value.Trim();
                     }
 
-                    var seeAlsoElements = memberElement.Elements("seealso");
-                    foreach (var seeAlsoElement in seeAlsoElements)
+                    foreach (var typeParamElement in memberElement.Elements("typeparam"))
                     {
-                        memberDoc.SeeAlso.Add(seeAlsoElement.Attribute("cref").Value);
+                        memberDoc.TypeParameters[typeParamElement.Attribute("name")?.Value] = typeParamElement.Value.Trim();
                     }
 
-                    var exampleElements = memberElement.Elements("example");
-                    foreach (var exampleElement in exampleElements)
+                    foreach (var exceptionElement in memberElement.Elements("exception"))
+                    {
+                        memberDoc.Exceptions[exceptionElement.Attribute("cref")?.Value] = exceptionElement.Value.Trim();
+                    }
+
+                    foreach (var seeAlsoElement in memberElement.Elements("seealso"))
+                    {
+                        memberDoc.SeeAlso.Add(seeAlsoElement.Attribute("cref")?.Value);
+                    }
+
+                    foreach (var exampleElement in memberElement.Elements("example"))
                     {
                         memberDoc.Examples.Add(exampleElement.Value.Trim());
                     }
@@ -82,7 +92,7 @@ namespace XmlDocConverter.Utilities
 
                 foreach (var member in classDoc.Members)
                 {
-                    var memberNameWithoutPrefix = member.MemberName.StartsWith("M:") ? member.MemberName.Substring(2) : member.MemberName;
+                    var memberNameWithoutPrefix = member.MemberName?.StartsWith("M:") ?? false ? member.MemberName.Substring(2) : member.MemberName;
                     markdown.AppendLine($"## {memberNameWithoutPrefix}");
                     markdown.AppendLine();
                     markdown.AppendLine($"**Summary:**");
@@ -102,12 +112,39 @@ namespace XmlDocConverter.Utilities
                         markdown.AppendLine();
                     }
 
+                    if (member.TypeParameters.Count > 0)
+                    {
+                        markdown.AppendLine($"**Type Parameters:**");
+                        foreach (var typeParam in member.TypeParameters)
+                        {
+                            markdown.AppendLine($"- **{typeParam.Key}:** {typeParam.Value}");
+                        }
+                        markdown.AppendLine();
+                    }
+
+                    if (member.Exceptions.Count > 0)
+                    {
+                        markdown.AppendLine($"**Exceptions:**");
+                        foreach (var exception in member.Exceptions)
+                        {
+                            markdown.AppendLine($"- **{exception.Key}:** {exception.Value}");
+                        }
+                        markdown.AppendLine();
+                    }
+
+                    if (!string.IsNullOrEmpty(member.Returns))
+                    {
+                        markdown.AppendLine($"**Returns:**");
+                        markdown.AppendLine($"{member.Returns}");
+                        markdown.AppendLine();
+                    }
+
                     if (member.SeeAlso.Count > 0)
                     {
                         markdown.AppendLine($"**See Also:**");
                         foreach (var seeAlso in member.SeeAlso)
                         {
-                            var seeAlsoWithoutPrefix = seeAlso.StartsWith("M:") ? seeAlso.Substring(2) : seeAlso;
+                            var seeAlsoWithoutPrefix = seeAlso?.StartsWith("M:") ?? false ? seeAlso.Substring(2) : seeAlso;
                             markdown.AppendLine($"- {seeAlsoWithoutPrefix}");
                         }
                         markdown.AppendLine();
