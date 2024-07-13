@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using XmlDocConverter.Models;
 
@@ -23,8 +26,8 @@ namespace XmlDocConverter.Utilities
                 {
                     ClassName = fullClassName.Split('.').Last(),
                     Namespace = string.Join(".", fullClassName.Split('.').SkipLast(1)),
-                    Summary = classElement.Element("summary")?.Value.Trim(),
-                    Remarks = classElement.Element("remarks")?.Value.Trim()
+                    Summary = CleanWhitespace(ParseXmlDocumentation(classElement.Element("summary"))),
+                    Remarks = CleanWhitespace(ParseXmlDocumentation(classElement.Element("remarks")))
                 };
 
                 var memberElements = members.Where(m => m.Attribute("name")?.Value.StartsWith($"M:{fullClassName}.") ?? false);
@@ -34,24 +37,24 @@ namespace XmlDocConverter.Utilities
                     var memberDoc = new MemberDocumentation
                     {
                         MemberName = memberElement.Attribute("name")?.Value,
-                        Summary = memberElement.Element("summary")?.Value.Trim(),
-                        Remarks = memberElement.Element("remarks")?.Value.Trim(),
-                        Returns = memberElement.Element("returns")?.Value.Trim()
+                        Summary = CleanWhitespace(ParseXmlDocumentation(memberElement.Element("summary"))),
+                        Remarks = CleanWhitespace(ParseXmlDocumentation(memberElement.Element("remarks"))),
+                        Returns = CleanWhitespace(ParseXmlDocumentation(memberElement.Element("returns")))
                     };
 
                     foreach (var paramElement in memberElement.Elements("param"))
                     {
-                        memberDoc.Parameters[paramElement.Attribute("name")?.Value] = paramElement.Value.Trim();
+                        memberDoc.Parameters[paramElement.Attribute("name")?.Value] = CleanWhitespace(paramElement.Value.Trim());
                     }
 
                     foreach (var typeParamElement in memberElement.Elements("typeparam"))
                     {
-                        memberDoc.TypeParameters[typeParamElement.Attribute("name")?.Value] = typeParamElement.Value.Trim();
+                        memberDoc.TypeParameters[typeParamElement.Attribute("name")?.Value] = CleanWhitespace(typeParamElement.Value.Trim());
                     }
 
                     foreach (var exceptionElement in memberElement.Elements("exception"))
                     {
-                        memberDoc.Exceptions[exceptionElement.Attribute("cref")?.Value] = exceptionElement.Value.Trim();
+                        memberDoc.Exceptions[exceptionElement.Attribute("cref")?.Value] = CleanWhitespace(exceptionElement.Value.Trim());
                     }
 
                     foreach (var seeAlsoElement in memberElement.Elements("seealso"))
@@ -61,7 +64,7 @@ namespace XmlDocConverter.Utilities
 
                     foreach (var exampleElement in memberElement.Elements("example"))
                     {
-                        memberDoc.Examples.Add(exampleElement.Value.Trim());
+                        memberDoc.Examples.Add(CleanWhitespace(exampleElement.Value.Trim()));
                     }
 
                     classDoc.Members.Add(memberDoc);
@@ -75,7 +78,7 @@ namespace XmlDocConverter.Utilities
 
         public static string GenerateMarkdown(List<ClassDocumentation> classDocs)
         {
-            var markdown = new System.Text.StringBuilder();
+            var markdown = new StringBuilder();
 
             foreach (var classDoc in classDocs)
             {
@@ -90,9 +93,27 @@ namespace XmlDocConverter.Utilities
                 markdown.AppendLine($"{classDoc.Remarks}");
                 markdown.AppendLine();
 
+                if (classDoc.Members.Count > 0)
+                {
+                    markdown.AppendLine($"## Members");
+                    markdown.AppendLine();
+                    markdown.AppendLine($"| Name | Summary |");
+                    markdown.AppendLine($"| --- | --- |");
+
+                    foreach (var member in classDoc.Members)
+                    {
+                        var memberNameWithoutPrefix = member.MemberName?.StartsWith("M:") ?? false ? member.MemberName.Substring(2) : member.MemberName;
+                        var memberAnchor = GenerateAnchor(memberNameWithoutPrefix);
+                        markdown.AppendLine($"| [{memberNameWithoutPrefix}](#{memberAnchor}) | {member.Summary} |");
+                    }
+
+                    markdown.AppendLine();
+                }
+
                 foreach (var member in classDoc.Members)
                 {
                     var memberNameWithoutPrefix = member.MemberName?.StartsWith("M:") ?? false ? member.MemberName.Substring(2) : member.MemberName;
+                    var memberAnchor = GenerateAnchor(memberNameWithoutPrefix);
                     markdown.AppendLine($"## {memberNameWithoutPrefix}");
                     markdown.AppendLine();
                     markdown.AppendLine($"**Summary:**");
@@ -167,6 +188,40 @@ namespace XmlDocConverter.Utilities
             }
 
             return markdown.ToString();
+        }
+
+        private static string CleanWhitespace(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return input;
+
+            return Regex.Replace(input, @"\s+", " ").Trim();
+        }
+
+        private static string ParseXmlDocumentation(XElement element)
+        {
+            if (element == null)
+                return string.Empty;
+
+            string text = string.Join("", element.Nodes().Select(node => {
+                if (node is XText textNode)
+                {
+                    return textNode.Value;
+                }
+                else if (node is XElement el && el.Name == "paramref")
+                {
+                    return $"`{el.Attribute("name")?.Value}`";
+                }
+                return "";
+            }));
+
+            return text;
+        }
+
+        private static string GenerateAnchor(string memberName)
+        {
+            // Convert to lowercase, remove invalid characters, and remove spaces
+            return Regex.Replace(memberName.ToLower(), @"[^\w]+", "").Trim();
         }
     }
 }
