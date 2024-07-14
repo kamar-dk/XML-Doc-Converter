@@ -9,7 +9,10 @@ using XmlDocConverter.Models;
 
 namespace XmlDocConverter.Utilities.DocumentationParser
 {
-    public static class XmlParser : Parser
+    /// <summary>
+    /// Class for parsing the XML Documentation to C# instance of classes
+    /// </summary>
+    public class XmlParser : Parser
     {
         /// <summary>
         /// Method for parsing the XML documentation file to C# classes
