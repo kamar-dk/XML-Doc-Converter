@@ -6,12 +6,14 @@ using XmlDocConverter.Utilities;
 using XmlDocConverter.Utilities.DocumentationParser;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
+using System.Diagnostics;
 
 namespace XmlDocConverter
 {
     public partial class MainWindow : Window
     {
         private string selectedFilePath;
+        private string selectedFileName;
         private string outputDirectory;
 
         public MainWindow()
@@ -26,7 +28,11 @@ namespace XmlDocConverter
             if (openFileDialog.ShowDialog() == true)
             {
                 selectedFilePath = openFileDialog.FileName;
+                selectedFileName = openFileDialog.SafeFileName;
+                outputDirectory = Path.GetDirectoryName(selectedFilePath); // Set the output directory to the file's directory
                 txtEditor.Text = File.ReadAllText(selectedFilePath);
+                txtSelectedFilePath.Text = selectedFileName; // Display the selected file path
+                txtOutputDirectory.Text = outputDirectory; // Display the output directory
             }
         }
 
@@ -38,7 +44,7 @@ namespace XmlDocConverter
                 var classDocs = XmlParser.ParseDocumentation(xmlDoc);
                 string markdownContent = MarkdownParser.GenerateMarkdown(classDocs);
 
-                string markdownPath = Path.Combine(Path.GetDirectoryName(selectedFilePath), "documentation.md");
+                string markdownPath = Path.Combine(outputDirectory, "documentation.md");
                 File.WriteAllText(markdownPath, markdownContent);
 
                 MessageBox.Show($"Markdown file created at {markdownPath}", "Conversion Complete", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -80,7 +86,25 @@ namespace XmlDocConverter
             if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
                 outputDirectory = dialog.FileName;
+                txtOutputDirectory.Text = outputDirectory; // Display the selected output directory
                 MessageBox.Show($"Output directory set to: {outputDirectory}", "Output Directory", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        private void btnOpenOutputFolder_Click(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(outputDirectory))
+            {
+                Process.Start(new ProcessStartInfo()
+                {
+                    FileName = outputDirectory,
+                    UseShellExecute = true,
+                    Verb = "open"
+                });
+            }
+            else
+            {
+                MessageBox.Show("Please set the output directory first.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }
