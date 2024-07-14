@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 
 namespace XmlDocConverter.Utilities.DocumentationParser
 {
+    /// <summary>
+    /// Class with Utility Methods for the differet Parser classes
+    /// <seealso cref="HtmlParser"/>
+    /// <seealso cref="XmlParser"/>
+    /// <seealso cref="MarkdownParser"/>
+    /// </summary>
     public class Parser
     {
         public static string GenerateAnchor(string memberName)
