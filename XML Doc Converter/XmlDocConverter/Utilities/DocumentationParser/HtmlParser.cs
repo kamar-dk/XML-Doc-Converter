@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata;
-using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 using XmlDocConverter.Models;
 
 namespace XmlDocConverter.Utilities.DocumentationParser
@@ -36,17 +32,9 @@ namespace XmlDocConverter.Utilities.DocumentationParser
 
             html.AppendLine("<body>");
             html.AppendLine("<div class=\"sidebar\">");
-            html.AppendLine("<h2>Packages</h2>");
+            html.AppendLine("<h2>Table of Contents</h2>");
             html.AppendLine("<ul>");
-            // Add package links here
-            foreach (var ns in classDocs.Select(c => c.Namespace).Distinct().OrderBy(ns => ns))
-            {
-                html.AppendLine($"<li><a href=\"#{GenerateAnchor(ns)}\">{ns}</a></li>");
-            }
-            html.AppendLine("</ul>");
-            html.AppendLine("</div>");
 
-            html.AppendLine("<div class=\"content\">");
             // Create a dictionary to store namespaces and their respective classes
             var namespaces = new Dictionary<string, List<ClassDocumentation>>();
             foreach (var classDoc in classDocs)
@@ -57,6 +45,14 @@ namespace XmlDocConverter.Utilities.DocumentationParser
                 }
                 namespaces[classDoc.Namespace].Add(classDoc);
             }
+
+            // Generate nested list structure for namespaces
+            GenerateNamespaceList(html, namespaces);
+
+            html.AppendLine("</ul>");
+            html.AppendLine("</div>");
+
+            html.AppendLine("<div class=\"content\">");
 
             // Generate the documentation for each namespace and its classes
             foreach (var ns in namespaces.Keys.OrderBy(ns => ns))
@@ -165,38 +161,79 @@ namespace XmlDocConverter.Utilities.DocumentationParser
             return html.ToString();
         }
 
-        private static new string GenerateAnchor(string name)
+        private static void GenerateNamespaceList(StringBuilder html, Dictionary<string, List<ClassDocumentation>> namespaces)
         {
-            return name.Replace('.', '-');
-        }
+            var nsHierarchy = BuildNamespaceHierarchy(namespaces.Keys);
 
-        private static string GenerateNestedToc(Dictionary<string, List<ClassDocumentation>> namespaces)
-        {
-            var sortedNamespaces = namespaces.Keys.OrderBy(ns => ns).ToList();
-            return GenerateNestedTocRecursive(sortedNamespaces, 0);
-        }
-
-        private static string GenerateNestedTocRecursive(List<string> namespaces, int level)
-        {
-            var html = new StringBuilder();
-            html.AppendLine("<ul>");
-            for (int i = 0; i < namespaces.Count; i++)
+            foreach (var nsNode in nsHierarchy)
             {
-                var currentNamespace = namespaces[i];
-                var nextNamespace = i + 1 < namespaces.Count ? namespaces[i + 1] : null;
+                GenerateNamespaceNode(html, nsNode);
+            }
+        }
 
-                var indent = new string(' ', level * 2);
-                html.AppendLine($"{indent}<li><a href=\"#{GenerateAnchor(currentNamespace)}\">{currentNamespace}</a></li>");
+        private static void GenerateNamespaceNode(StringBuilder html, NamespaceNode nsNode)
+        {
+            html.AppendLine($"<li><a href=\"#{GenerateAnchor(nsNode.FullName)}\">{nsNode.Name}</a></li>");
 
-                if (nextNamespace != null && nextNamespace.StartsWith(currentNamespace + "."))
+            if (nsNode.Children.Any())
+            {
+                html.AppendLine("<ul>");
+                foreach (var child in nsNode.Children)
                 {
-                    var nestedNamespaces = namespaces.Skip(i + 1).TakeWhile(ns => ns.StartsWith(currentNamespace + ".")).ToList();
-                    html.AppendLine(GenerateNestedTocRecursive(nestedNamespaces, level + 1));
-                    i += nestedNamespaces.Count;
+                    GenerateNamespaceNode(html, child);
+                }
+                html.AppendLine("</ul>");
+            }
+        }
+
+        private static List<NamespaceNode> BuildNamespaceHierarchy(IEnumerable<string> namespaces)
+        {
+            var rootNodes = new List<NamespaceNode>();
+
+            foreach (var ns in namespaces.OrderBy(n => n))
+            {
+                var parts = ns.Split('.');
+                NamespaceNode currentNode = null;
+
+                foreach (var part in parts)
+                {
+                    var fullName = currentNode == null ? part : $"{currentNode.FullName}.{part}";
+                    var existingNode = currentNode?.Children.FirstOrDefault(n => n.Name == part) ??
+                                       rootNodes.FirstOrDefault(n => n.Name == part && n.FullName == fullName);
+
+                    if (existingNode == null)
+                    {
+                        var newNode = new NamespaceNode { Name = part, FullName = fullName };
+                        if (currentNode == null)
+                        {
+                            rootNodes.Add(newNode);
+                        }
+                        else
+                        {
+                            currentNode.Children.Add(newNode);
+                        }
+                        currentNode = newNode;
+                    }
+                    else
+                    {
+                        currentNode = existingNode;
+                    }
                 }
             }
-            html.AppendLine("</ul>");
-            return html.ToString();
+
+            return rootNodes;
+        }
+
+        private class NamespaceNode
+        {
+            public string Name { get; set; }
+            public string FullName { get; set; }
+            public List<NamespaceNode> Children { get; } = new List<NamespaceNode>();
+        }
+
+        private static string GenerateAnchor(string name)
+        {
+            return name.Replace('.', '-');
         }
     }
 }
