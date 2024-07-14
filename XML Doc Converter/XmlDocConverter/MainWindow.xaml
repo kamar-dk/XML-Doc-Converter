@@ -9,7 +9,8 @@
     <DockPanel Margin="10">
         <WrapPanel HorizontalAlignment="Center" DockPanel.Dock="Top" Margin="0,0,0,10">
             <Button Name="btnOpenFile" Click="btnOpenFile_Click">Open file</Button>
-            <Button Name="btnConvertFile" Click="btnConvertFile_Click" Margin="10,0,0,0">Convert to Markdown</Button>
+            <Button Name="btnConvertFileToMarkdown" Click="btnConvertFileToMarkdown_Click" Margin="10,0,0,0">Convert to Markdown</Button>
+            <Button Name="btnConvertFileToHtml" Click="btnConvertFileToHtml_Click" Margin="10,0,0,0">Convert to HTML</Button>
         </WrapPanel>
         <TextBox Name="txtEditor" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" />
     </DockPanel>
