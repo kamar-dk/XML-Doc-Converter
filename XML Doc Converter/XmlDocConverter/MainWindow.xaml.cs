@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows;
 using System.Xml.Linq;
 using XmlDocConverter.Utilities;
+using XmlDocConverter.Utilities.DocumentationParser;
 
 namespace XmlDocConverter
 {
@@ -31,8 +32,8 @@ namespace XmlDocConverter
             if (!string.IsNullOrEmpty(selectedFilePath))
             {
                 XDocument xmlDoc = XDocument.Load(selectedFilePath);
-                var classDocs = DocumentationParser.ParseDocumentation(xmlDoc);
-                string markdownContent = DocumentationParser.GenerateMarkdown(classDocs);
+                var classDocs = XmlParser.ParseDocumentation(xmlDoc);
+                string markdownContent = MarkdownParser.GenerateMarkdown(classDocs);
 
                 string markdownPath = Path.Combine(Path.GetDirectoryName(selectedFilePath), "documentation.md");
                 File.WriteAllText(markdownPath, markdownContent);
@@ -50,8 +51,8 @@ namespace XmlDocConverter
             if (!string.IsNullOrEmpty(selectedFilePath))
             {
                 XDocument xmlDoc = XDocument.Load(selectedFilePath);
-                var classDocs = DocumentationParser.ParseDocumentation(xmlDoc);
-                string htmlContent = DocumentationParser.GenerateHtml(classDocs);
+                var classDocs = XmlParser.ParseDocumentation(xmlDoc);
+                string htmlContent = HtmlParser.GenerateHtml(classDocs);
 
                 string htmlPath = Path.Combine(Path.GetDirectoryName(selectedFilePath), "documentation.html");
                 File.WriteAllText(htmlPath, htmlContent);
