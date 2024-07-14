@@ -20,7 +20,7 @@ namespace XmlDocConverter.Utilities.DocumentationParser
         /// Method for generating an HTML document with documentation
         /// </summary>
         /// <param name="classDocs">List of <seealso cref="ClassDocumentation"/> with the documentation</param>
-        /// <returns>Returns string contain the HTML code for the document</returns>
+        /// <returns>Returns string containing the HTML code for the document</returns>
         public static string GenerateHtml(List<ClassDocumentation> classDocs)
         {
             var html = new StringBuilder();
@@ -30,13 +30,23 @@ namespace XmlDocConverter.Utilities.DocumentationParser
             html.AppendLine("<head>");
             html.AppendLine("<meta charset=\"UTF-8\">");
             html.AppendLine("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">");
-            html.AppendLine("<title> Documentation </title>");
+            html.AppendLine("<title>Documentation</title>");
             html.AppendLine("<link rel=\"stylesheet\" href=\"styles.css\">");
             html.AppendLine("</head>");
 
             html.AppendLine("<body>");
-            html.AppendLine("<div class=\"container\">");
+            html.AppendLine("<div class=\"sidebar\">");
+            html.AppendLine("<h2>Packages</h2>");
+            html.AppendLine("<ul>");
+            // Add package links here
+            foreach (var ns in classDocs.Select(c => c.Namespace).Distinct().OrderBy(ns => ns))
+            {
+                html.AppendLine($"<li><a href=\"#{GenerateAnchor(ns)}\">{ns}</a></li>");
+            }
+            html.AppendLine("</ul>");
+            html.AppendLine("</div>");
 
+            html.AppendLine("<div class=\"content\">");
             // Create a dictionary to store namespaces and their respective classes
             var namespaces = new Dictionary<string, List<ClassDocumentation>>();
             foreach (var classDoc in classDocs)
@@ -48,17 +58,10 @@ namespace XmlDocConverter.Utilities.DocumentationParser
                 namespaces[classDoc.Namespace].Add(classDoc);
             }
 
-            // Generate the table of contents
-            html.AppendLine("<h1>Table of Contents</h1>");
-            html.AppendLine(GenerateNestedToc(namespaces));
-
             // Generate the documentation for each namespace and its classes
             foreach (var ns in namespaces.Keys.OrderBy(ns => ns))
             {
-                html.AppendLine($"<h1 id=\"{GenerateAnchor(ns)}\">{ns}</h1>");
-
-                // Generate the table of contents for the classes in this namespace
-                html.AppendLine("<h2>Table of Contents</h2>");
+                html.AppendLine($"<h2 id=\"{GenerateAnchor(ns)}\">{ns}</h2>");
                 html.AppendLine("<ul>");
                 foreach (var classDoc in namespaces[ns])
                 {
@@ -68,24 +71,22 @@ namespace XmlDocConverter.Utilities.DocumentationParser
 
                 foreach (var classDoc in namespaces[ns])
                 {
-                    html.AppendLine($"<h2 id=\"{GenerateAnchor(classDoc.ClassName)}\">{classDoc.ClassName}</h2>");
+                    html.AppendLine($"<h3 id=\"{GenerateAnchor(classDoc.ClassName)}\">{classDoc.ClassName}</h3>");
                     html.AppendLine($"<p><strong>Namespace:</strong> {classDoc.Namespace}</p>");
                     html.AppendLine($"<p><strong>Summary:</strong> {classDoc.Summary}</p>");
                     html.AppendLine($"<p><strong>Remarks:</strong> {classDoc.Remarks}</p>");
 
                     if (classDoc.Members.Count > 0)
                     {
-                        html.AppendLine("<h3>Members</h3>");
+                        html.AppendLine("<h4>Members</h4>");
                         html.AppendLine("<table>");
                         html.AppendLine("<tr><th>Name</th><th>Summary</th></tr>");
-
                         foreach (var member in classDoc.Members)
                         {
                             var memberNameWithoutPrefix = member.MemberName?.StartsWith("M:") ?? false ? member.MemberName.Substring(2) : member.MemberName;
                             var memberAnchor = GenerateAnchor(memberNameWithoutPrefix);
                             html.AppendLine($"<tr><td><a href=\"#{memberAnchor}\">{memberNameWithoutPrefix}</a></td><td>{member.Summary}</td></tr>");
                         }
-
                         html.AppendLine("</table>");
                     }
 
@@ -93,7 +94,7 @@ namespace XmlDocConverter.Utilities.DocumentationParser
                     {
                         var memberNameWithoutPrefix = member.MemberName?.StartsWith("M:") ?? false ? member.MemberName.Substring(2) : member.MemberName;
                         var memberAnchor = GenerateAnchor(memberNameWithoutPrefix);
-                        html.AppendLine($"<h3 id=\"{memberAnchor}\">{memberNameWithoutPrefix}</h3>");
+                        html.AppendLine($"<h4 id=\"{memberAnchor}\">{memberNameWithoutPrefix}</h4>");
                         html.AppendLine($"<p><strong>Summary:</strong> {member.Summary}</p>");
                         html.AppendLine($"<p><strong>Remarks:</strong> {member.Remarks}</p>");
 
@@ -160,9 +161,13 @@ namespace XmlDocConverter.Utilities.DocumentationParser
             html.AppendLine("</div>");
             html.AppendLine("</body>");
             html.AppendLine("</html>");
-            
 
             return html.ToString();
+        }
+
+        private static new string GenerateAnchor(string name)
+        {
+            return name.Replace('.', '-');
         }
 
         private static string GenerateNestedToc(Dictionary<string, List<ClassDocumentation>> namespaces)
