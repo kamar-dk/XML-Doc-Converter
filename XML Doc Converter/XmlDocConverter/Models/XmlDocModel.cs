@@ -2,6 +2,9 @@
 
 namespace XmlDocConverter.Models
 {
+    /// <summary>
+    /// Class for Member documentation from the XML documentation
+    /// </summary>
     public class MemberDocumentation
     {
         public string MemberName { get; set; }
@@ -15,6 +18,9 @@ namespace XmlDocConverter.Models
         public Dictionary<string, string> Exceptions { get; set; } = new Dictionary<string, string>();
     }
 
+    /// <summary>
+    /// Class for Class Documentation from the XML documentation
+    /// </summary>
     public class ClassDocumentation
     {
         public string ClassName { get; set; }
