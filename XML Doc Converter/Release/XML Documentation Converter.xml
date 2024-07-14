@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>XML Documentation Converter</name>
+    </assembly>
+    <members>
+        <member name="T:XmlDocConverter.App">
+            <summary>
+            Interaction logic for App.xaml
+            </summary>
+            <summary>
+            App
+            </summary>
+        </member>
+        <member name="M:XmlDocConverter.App.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="M:XmlDocConverter.App.Main">
+            <summary>
+            Application Entry Point.
+            </summary>
+        </member>
+        <member name="T:XmlDocConverter.MainWindow">
+            <summary>
+            MainWindow
+            </summary>
+        </member>
+        <member name="M:XmlDocConverter.MainWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:XmlDocConverter.Models.MemberDocumentation">
+            <summary>
+            Class for Member documentation from the XML documentation
+            </summary>
+        </member>
+        <member name="T:XmlDocConverter.Models.ClassDocumentation">
+            <summary>
+            Class for Class Documentation from the XML documentation
+            </summary>
+        </member>
+        <member name="T:XmlDocConverter.Utilities.DocumentationParser.HtmlParser">
+            <summary>
+            Parser class for passing XML Documentation to HTML
+            Inherits from <seealso cref="T:XmlDocConverter.Utilities.DocumentationParser.Parser"/>
+            </summary>
+        </member>
+        <member name="M:XmlDocConverter.Utilities.DocumentationParser.HtmlParser.GenerateHtml(System.Collections.Generic.List{XmlDocConverter.Models.ClassDocumentation})">
+            <summary>
+            Method for generating an HTML document with documentation
+            </summary>
+            <param name="classDocs">List of <seealso cref="T:XmlDocConverter.Models.ClassDocumentation"/> with the documentation</param>
+            <returns>Returns string containing the HTML code for the document</returns>
+        </member>
+        <member name="T:XmlDocConverter.Utilities.DocumentationParser.MarkdownParser">
+            <summary>
+            Parser class for passing XML Documentation to Markdown
+            Inherits from <seealso cref="T:XmlDocConverter.Utilities.DocumentationParser.Parser"/>
+            </summary>
+        </member>
+        <member name="M:XmlDocConverter.Utilities.DocumentationParser.MarkdownParser.GenerateMarkdown(System.Collections.Generic.List{XmlDocConverter.Models.ClassDocumentation})">
+            <summary>
+            Method for generation a Markdown document
+            </summary>
+            <param name="classDocs">List of <seealso cref="T:XmlDocConverter.Models.ClassDocumentation"/> with the documentation</param>
+            <returns>Returns a string with the Markdown</returns>
+        </member>
+        <member name="T:XmlDocConverter.Utilities.DocumentationParser.Parser">
+            <summary>
+            Class with Utility Methods for the differet Parser classes
+            <seealso cref="T:XmlDocConverter.Utilities.DocumentationParser.HtmlParser"/>
+            <seealso cref="T:XmlDocConverter.Utilities.DocumentationParser.XmlParser"/>
+            <seealso cref="T:XmlDocConverter.Utilities.DocumentationParser.MarkdownParser"/>
+            </summary>
+        </member>
+        <member name="M:XmlDocConverter.Utilities.DocumentationParser.Parser.CleanWhitespace(System.String)">
+            <summary>
+            Method for cleaning whitespace from a string
+            </summary>
+            <param name="input">String that needs to be cleaned</param>
+            <returns>Returns a cleaned string</returns>
+        </member>
+        <member name="T:XmlDocConverter.Utilities.DocumentationParser.XmlParser">
+            <summary>
+            Class for parsing the XML Documentation to C# instance of classes
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:XmlDocConverter.Utilities.DocumentationParser.XmlParser.ParseDocumentation(System.Xml.Linq.XDocument)" -->
+        <member name="M:XmlDocConverter.Utilities.DocumentationParser.XmlParser.ParseXmlDocumentation(System.Xml.Linq.XElement)">
+            <summary>
+            Parses the given <see cref="T:System.Xml.Linq.XElement"/> and extracts the text content,
+            including handling of <c>paramref</c> elements by formatting them accordingly.
+            </summary>
+            <param name="element">The XML element to parse. Can be <c>null</c>.</param>
+            <returns>
+            A <see cref="T:System.String"/> containing the concatenated text content of the XML element,
+            with any <c>paramref</c> elements' names enclosed in backticks. If the input element is <c>null</c>,
+            an empty string is returned.
+            </returns>
+            <example>
+            Given the following XML element:
+            <code>
+            <example>
+            <doc>
+              This is an <paramref name="example"/> of XML documentation.
+            </doc>
+            </example>
+            </code>
+            The method will return:
+            <code>
+            "This is an `example` of XML documentation."
+            </code>
+            </example>
+            <remarks>
+            This method processes the child nodes of the provided <see cref="T:System.Xml.Linq.XElement"/>.
+            It handles text nodes and <c>paramref</c> elements specifically, while ignoring other types of nodes.
+            </remarks> 
+        </member>
+    </members>
+</doc>
