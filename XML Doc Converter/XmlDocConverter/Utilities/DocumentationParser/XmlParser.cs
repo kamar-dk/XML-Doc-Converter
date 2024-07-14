@@ -112,7 +112,7 @@ namespace XmlDocConverter.Utilities.DocumentationParser
         /// <remarks>
         /// This method processes the child nodes of the provided <see cref="XElement"/>.
         /// It handles text nodes and <c>paramref</c> elements specifically, while ignoring other types of nodes.
-        /// </remarks>
+        /// </remarks> 
         private static string ParseXmlDocumentation(XElement element)
         {
             if (element == null)
