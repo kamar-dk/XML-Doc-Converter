@@ -8,8 +8,17 @@ using XmlDocConverter.Models;
 
 namespace XmlDocConverter.Utilities
 {
+    /// <summary>
+    /// Class for parsing XML documentation from XML to C# classes
+    /// Got method to convert create Markdown document with the documentation
+    /// </summary>
     public class DocumentationParser
     {
+        /// <summary>
+        /// Method for parsing the XML documentation file to C# classes
+        /// </summary>
+        /// <param name="xmlDoc">XML Document loaded in from the UI</param>
+        /// <returns>Returns a list of <seealso cref="ClassDocumentation"/><</returns>
         public static List<ClassDocumentation> ParseDocumentation(XDocument xmlDoc)
         {
             var classDocs = new List<ClassDocumentation>();
@@ -76,6 +85,11 @@ namespace XmlDocConverter.Utilities
             return classDocs;
         }
 
+        /// <summary>
+        /// Method for generation a Markdown document
+        /// </summary>
+        /// <param name="classDocs">List of <seealso cref="ClassDocumentation"/> with the documentation</param>
+        /// <returns>Returns a string with the Markdown</returns>
         public static string GenerateMarkdown(List<ClassDocumentation> classDocs)
         {
             var markdown = new StringBuilder();
@@ -190,6 +204,11 @@ namespace XmlDocConverter.Utilities
             return markdown.ToString();
         }
 
+        /// <summary>
+        /// Method for cleaning whitespace from a string
+        /// </summary>
+        /// <param name="input">String that needs to be cleaned</param>
+        /// <returns>Returns a cleaned string</returns>
         private static string CleanWhitespace(string input)
         {
             if (string.IsNullOrEmpty(input))
@@ -198,6 +217,34 @@ namespace XmlDocConverter.Utilities
             return Regex.Replace(input, @"\s+", " ").Trim();
         }
 
+        /// <summary>
+        /// Parses the given <see cref="XElement"/> and extracts the text content,
+        /// including handling of <c>paramref</c> elements by formatting them accordingly.
+        /// </summary>
+        /// <param name="element">The XML element to parse. Can be <c>null</c>.</param>
+        /// <returns>
+        /// A <see cref="string"/> containing the concatenated text content of the XML element,
+        /// with any <c>paramref</c> elements' names enclosed in backticks. If the input element is <c>null</c>,
+        /// an empty string is returned.
+        /// </returns>
+        /// <example>
+        /// Given the following XML element:
+        /// <code>
+        /// <example>
+        /// <doc>
+        ///   This is an <paramref name="example"/> of XML documentation.
+        /// </doc>
+        /// </example>
+        /// </code>
+        /// The method will return:
+        /// <code>
+        /// "This is an `example` of XML documentation."
+        /// </code>
+        /// </example>
+        /// <remarks>
+        /// This method processes the child nodes of the provided <see cref="XElement"/>.
+        /// It handles text nodes and <c>paramref</c> elements specifically, while ignoring other types of nodes.
+        /// </remarks>
         private static string ParseXmlDocumentation(XElement element)
         {
             if (element == null)
