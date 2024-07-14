@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using XmlDocConverter.Models;
 
 namespace XmlDocConverter.Utilities.DocumentationParser
@@ -21,6 +24,18 @@ namespace XmlDocConverter.Utilities.DocumentationParser
         public static string GenerateHtml(List<ClassDocumentation> classDocs)
         {
             var html = new StringBuilder();
+
+            html.AppendLine("<!DOCTYPE html>");
+            html.AppendLine("<html lang=\"en\">");
+            html.AppendLine("<head>");
+            html.AppendLine("<meta charset=\"UTF-8\">");
+            html.AppendLine("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">");
+            html.AppendLine("<title> Documentation </title>");
+            html.AppendLine("<link rel=\"stylesheet\" href=\"styles.css\">");
+            html.AppendLine("</head>");
+
+            html.AppendLine("<body>");
+            html.AppendLine("<div class=\"container\">");
 
             // Create a dictionary to store namespaces and their respective classes
             var namespaces = new Dictionary<string, List<ClassDocumentation>>();
@@ -142,6 +157,10 @@ namespace XmlDocConverter.Utilities.DocumentationParser
                     html.AppendLine("<hr>");
                 }
             }
+            html.AppendLine("</div>");
+            html.AppendLine("</body>");
+            html.AppendLine("</html>");
+            
 
             return html.ToString();
         }
