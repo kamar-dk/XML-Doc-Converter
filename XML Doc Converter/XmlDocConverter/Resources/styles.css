@@ -1,22 +1,64 @@
 /* General styles */
 body {
     font-family: Arial, sans-serif;
-    line-height: 1.6;
-    margin: 20px;
-    color: #333;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    height: 100vh;
 }
 
-h1, h2, h3 {
-    color: #0056b3;
+.sidebar {
+    background-color: #f4f4f4;
+    padding: 15px;
+    width: 200px;
+    height: 100vh; /* Full height */
+    overflow-y: auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+    .sidebar h2 {
+        color: #2E3B4E;
+    }
+
+    .sidebar ul {
+        list-style-type: none;
+        padding-left: 0;
+    }
+
+        .sidebar ul li {
+            margin-bottom: 10px;
+        }
+
+            .sidebar ul li a {
+                text-decoration: none;
+                color: #2E3B4E;
+            }
+
+                .sidebar ul li a:hover {
+                    text-decoration: underline;
+                }
+
+.content {
+    padding: 20px;
+    margin-left: 220px; /* Adjust for sidebar width */
+    flex: 1;
+    overflow-y: auto;
+    height: 100vh; /* Full height */
+}
+
+h1, h2, h3, h4 {
+    color: #2E3B4E;
 }
 
 h1 {
-    border-bottom: 2px solid #0056b3;
+    border-bottom: 2px solid #2E3B4E;
     padding-bottom: 5px;
 }
 
 h2 {
-    border-bottom: 1px solid #0056b3;
+    border-bottom: 1px solid #2E3B4E;
     padding-bottom: 3px;
     margin-top: 20px;
 }
@@ -24,6 +66,11 @@ h2 {
 h3 {
     margin-top: 15px;
     font-size: 1.2em;
+}
+
+h4 {
+    margin-top: 10px;
+    font-size: 1.1em;
 }
 
 /* Table styles */
@@ -52,10 +99,10 @@ ul {
     padding-left: 20px;
 }
 
-ul ul {
-    padding-left: 20px;
-    list-style-type: disc;
-}
+    ul ul {
+        padding-left: 20px;
+        list-style-type: disc;
+    }
 
 li {
     margin-bottom: 5px;
@@ -64,12 +111,12 @@ li {
 /* Link styles */
 a {
     text-decoration: none;
-    color: #0056b3;
+    color: #2E3B4E;
 }
 
-a:hover {
-    text-decoration: underline;
-}
+    a:hover {
+        text-decoration: underline;
+    }
 
 /* Code block styles */
 pre, code {
@@ -89,9 +136,9 @@ p {
     margin: 10px 0;
 }
 
-p strong {
-    color: #000;
-}
+    p strong {
+        color: #000;
+    }
 
 /* HR styles */
 hr {
