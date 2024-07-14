@@ -94,111 +94,138 @@ namespace XmlDocConverter.Utilities
         {
             var markdown = new StringBuilder();
 
+            // Create a dictionary to store namespaces and their respective classes
+            var namespaces = new Dictionary<string, List<ClassDocumentation>>();
             foreach (var classDoc in classDocs)
             {
-                markdown.AppendLine($"# {classDoc.ClassName}");
-                markdown.AppendLine();
-                markdown.AppendLine($"**Namespace:** {classDoc.Namespace}");
-                markdown.AppendLine();
-                markdown.AppendLine($"**Summary:**");
-                markdown.AppendLine($"{classDoc.Summary}");
-                markdown.AppendLine();
-                markdown.AppendLine($"**Remarks:**");
-                markdown.AppendLine($"{classDoc.Remarks}");
+                if (!namespaces.ContainsKey(classDoc.Namespace))
+                {
+                    namespaces[classDoc.Namespace] = new List<ClassDocumentation>();
+                }
+                namespaces[classDoc.Namespace].Add(classDoc);
+            }
+
+            // Generate the table of contents
+            markdown.AppendLine("# Table of Contents");
+            markdown.AppendLine();
+            foreach (var ns in namespaces)
+            {
+                markdown.AppendLine($"- [{ns.Key}](#{GenerateAnchor(ns.Key)})");
+            }
+            markdown.AppendLine();
+
+            // Generate the documentation for each namespace and its classes
+            foreach (var ns in namespaces)
+            {
+                markdown.AppendLine($"# {ns.Key}");
                 markdown.AppendLine();
 
-                if (classDoc.Members.Count > 0)
+                foreach (var classDoc in ns.Value)
                 {
-                    markdown.AppendLine($"## Members");
+                    markdown.AppendLine($"## {classDoc.ClassName}");
                     markdown.AppendLine();
-                    markdown.AppendLine($"| Name | Summary |");
-                    markdown.AppendLine($"| --- | --- |");
+                    markdown.AppendLine($"**Namespace:** {classDoc.Namespace}");
+                    markdown.AppendLine();
+                    markdown.AppendLine($"**Summary:**");
+                    markdown.AppendLine($"{classDoc.Summary}");
+                    markdown.AppendLine();
+                    markdown.AppendLine($"**Remarks:**");
+                    markdown.AppendLine($"{classDoc.Remarks}");
+                    markdown.AppendLine();
+
+                    if (classDoc.Members.Count > 0)
+                    {
+                        markdown.AppendLine($"### Members");
+                        markdown.AppendLine();
+                        markdown.AppendLine($"| Name | Summary |");
+                        markdown.AppendLine($"| --- | --- |");
+
+                        foreach (var member in classDoc.Members)
+                        {
+                            var memberNameWithoutPrefix = member.MemberName?.StartsWith("M:") ?? false ? member.MemberName.Substring(2) : member.MemberName;
+                            var memberAnchor = GenerateAnchor(memberNameWithoutPrefix);
+                            markdown.AppendLine($"| [{memberNameWithoutPrefix}](#{memberAnchor}) | {member.Summary} |");
+                        }
+
+                        markdown.AppendLine();
+                    }
 
                     foreach (var member in classDoc.Members)
                     {
                         var memberNameWithoutPrefix = member.MemberName?.StartsWith("M:") ?? false ? member.MemberName.Substring(2) : member.MemberName;
                         var memberAnchor = GenerateAnchor(memberNameWithoutPrefix);
-                        markdown.AppendLine($"| [{memberNameWithoutPrefix}](#{memberAnchor}) | {member.Summary} |");
-                    }
+                        markdown.AppendLine($"### {memberNameWithoutPrefix}");
+                        markdown.AppendLine();
+                        markdown.AppendLine($"**Summary:**");
+                        markdown.AppendLine($"{member.Summary}");
+                        markdown.AppendLine();
+                        markdown.AppendLine($"**Remarks:**");
+                        markdown.AppendLine($"{member.Remarks}");
+                        markdown.AppendLine();
 
+                        if (member.Parameters.Count > 0)
+                        {
+                            markdown.AppendLine($"**Parameters:**");
+                            foreach (var param in member.Parameters)
+                            {
+                                markdown.AppendLine($"- **{param.Key}:** {param.Value}");
+                            }
+                            markdown.AppendLine();
+                        }
+
+                        if (member.TypeParameters.Count > 0)
+                        {
+                            markdown.AppendLine($"**Type Parameters:**");
+                            foreach (var typeParam in member.TypeParameters)
+                            {
+                                markdown.AppendLine($"- **{typeParam.Key}:** {typeParam.Value}");
+                            }
+                            markdown.AppendLine();
+                        }
+
+                        if (member.Exceptions.Count > 0)
+                        {
+                            markdown.AppendLine($"**Exceptions:**");
+                            foreach (var exception in member.Exceptions)
+                            {
+                                markdown.AppendLine($"- **{exception.Key}:** {exception.Value}");
+                            }
+                            markdown.AppendLine();
+                        }
+
+                        if (!string.IsNullOrEmpty(member.Returns))
+                        {
+                            markdown.AppendLine($"**Returns:**");
+                            markdown.AppendLine($"{member.Returns}");
+                            markdown.AppendLine();
+                        }
+
+                        if (member.SeeAlso.Count > 0)
+                        {
+                            markdown.AppendLine($"**See Also:**");
+                            foreach (var seeAlso in member.SeeAlso)
+                            {
+                                var seeAlsoWithoutPrefix = seeAlso?.StartsWith("M:") ?? false ? seeAlso.Substring(2) : seeAlso;
+                                markdown.AppendLine($"- {seeAlsoWithoutPrefix}");
+                            }
+                            markdown.AppendLine();
+                        }
+
+                        if (member.Examples.Count > 0)
+                        {
+                            markdown.AppendLine($"**Examples:**");
+                            foreach (var example in member.Examples)
+                            {
+                                markdown.AppendLine($"```");
+                                markdown.AppendLine($"{example}");
+                                markdown.AppendLine($"```");
+                            }
+                            markdown.AppendLine();
+                        }
+                    }
+                    markdown.AppendLine("---");
                     markdown.AppendLine();
                 }
-
-                foreach (var member in classDoc.Members)
-                {
-                    var memberNameWithoutPrefix = member.MemberName?.StartsWith("M:") ?? false ? member.MemberName.Substring(2) : member.MemberName;
-                    var memberAnchor = GenerateAnchor(memberNameWithoutPrefix);
-                    markdown.AppendLine($"## {memberNameWithoutPrefix}");
-                    markdown.AppendLine();
-                    markdown.AppendLine($"**Summary:**");
-                    markdown.AppendLine($"{member.Summary}");
-                    markdown.AppendLine();
-                    markdown.AppendLine($"**Remarks:**");
-                    markdown.AppendLine($"{member.Remarks}");
-                    markdown.AppendLine();
-
-                    if (member.Parameters.Count > 0)
-                    {
-                        markdown.AppendLine($"**Parameters:**");
-                        foreach (var param in member.Parameters)
-                        {
-                            markdown.AppendLine($"- **{param.Key}:** {param.Value}");
-                        }
-                        markdown.AppendLine();
-                    }
-
-                    if (member.TypeParameters.Count > 0)
-                    {
-                        markdown.AppendLine($"**Type Parameters:**");
-                        foreach (var typeParam in member.TypeParameters)
-                        {
-                            markdown.AppendLine($"- **{typeParam.Key}:** {typeParam.Value}");
-                        }
-                        markdown.AppendLine();
-                    }
-
-                    if (member.Exceptions.Count > 0)
-                    {
-                        markdown.AppendLine($"**Exceptions:**");
-                        foreach (var exception in member.Exceptions)
-                        {
-                            markdown.AppendLine($"- **{exception.Key}:** {exception.Value}");
-                        }
-                        markdown.AppendLine();
-                    }
-
-                    if (!string.IsNullOrEmpty(member.Returns))
-                    {
-                        markdown.AppendLine($"**Returns:**");
-                        markdown.AppendLine($"{member.Returns}");
-                        markdown.AppendLine();
-                    }
-
-                    if (member.SeeAlso.Count > 0)
-                    {
-                        markdown.AppendLine($"**See Also:**");
-                        foreach (var seeAlso in member.SeeAlso)
-                        {
-                            var seeAlsoWithoutPrefix = seeAlso?.StartsWith("M:") ?? false ? seeAlso.Substring(2) : seeAlso;
-                            markdown.AppendLine($"- {seeAlsoWithoutPrefix}");
-                        }
-                        markdown.AppendLine();
-                    }
-
-                    if (member.Examples.Count > 0)
-                    {
-                        markdown.AppendLine($"**Examples:**");
-                        foreach (var example in member.Examples)
-                        {
-                            markdown.AppendLine($"```");
-                            markdown.AppendLine($"{example}");
-                            markdown.AppendLine($"```");
-                        }
-                        markdown.AppendLine();
-                    }
-                }
-                markdown.AppendLine("---");
-                markdown.AppendLine();
             }
 
             return markdown.ToString();
