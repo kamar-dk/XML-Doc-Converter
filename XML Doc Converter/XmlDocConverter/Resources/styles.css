@@ -10,7 +10,7 @@ body {
 .sidebar {
     background-color: #f4f4f4;
     padding: 15px;
-    width: 200px;
+    width: 300px;
     height: 100vh; /* Full height */
     overflow-y: auto;
     position: fixed;
@@ -23,9 +23,15 @@ body {
     }
 
     .sidebar ul {
-        list-style-type: none;
+        list-style-type: disc; /* Use default bullet points */
+        margin-left: 20px; /* Ensure proper indentation */
         padding-left: 0;
     }
+
+        .sidebar ul ul {
+            list-style-type: circle; /* Optional: different bullet style for nested lists */
+            padding-left: 20px; /* Indent nested lists */
+        }
 
         .sidebar ul li {
             margin-bottom: 10px;
@@ -42,7 +48,7 @@ body {
 
 .content {
     padding: 20px;
-    margin-left: 220px; /* Adjust for sidebar width */
+    margin-left: 320px; /* Adjust for sidebar width */
     flex: 1;
     overflow-y: auto;
     height: 100vh; /* Full height */
