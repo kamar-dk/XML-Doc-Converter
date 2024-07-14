@@ -7,8 +7,17 @@ using XmlDocConverter.Models;
 
 namespace XmlDocConverter.Utilities.DocumentationParser
 {
+    /// <summary>
+    /// Parser class for passing XML Documentation to Markdown
+    /// Inherits from <seealso cref="Parser"/>
+    /// </summary>
     public class MarkdownParser : Parser
     {
+        /// <summary>
+        /// Method for generation a Markdown document
+        /// </summary>
+        /// <param name="classDocs">List of <seealso cref="ClassDocumentation"/> with the documentation</param>
+        /// <returns>Returns a string with the Markdown</returns>
         public static string GenerateMarkdown(List<ClassDocumentation> classDocs)
         {
             var markdown = new StringBuilder();
