@@ -26,7 +26,7 @@ namespace XmlDocConverter
             }
         }
 
-        private void btnConvertFile_Click(object sender, RoutedEventArgs e)
+        private void btnConvertFileToMarkdown_Click(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(selectedFilePath))
             {
@@ -38,6 +38,25 @@ namespace XmlDocConverter
                 File.WriteAllText(markdownPath, markdownContent);
 
                 MessageBox.Show($"Markdown file created at {markdownPath}", "Conversion Complete", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                MessageBox.Show("Please select an XML file first.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void btnConvertFileToHtml_Click(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(selectedFilePath))
+            {
+                XDocument xmlDoc = XDocument.Load(selectedFilePath);
+                var classDocs = DocumentationParser.ParseDocumentation(xmlDoc);
+                string htmlContent = DocumentationParser.GenerateHtml(classDocs);
+
+                string htmlPath = Path.Combine(Path.GetDirectoryName(selectedFilePath), "documentation.html");
+                File.WriteAllText(htmlPath, htmlContent);
+
+                MessageBox.Show($"HTML file created at {htmlPath}", "Conversion Complete", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else
             {
