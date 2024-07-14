@@ -120,6 +120,15 @@ namespace XmlDocConverter.Utilities
                 markdown.AppendLine($"# {ns.Key}");
                 markdown.AppendLine();
 
+                // Generate the table of contents for the classes in this namespace
+                markdown.AppendLine($"## Table of Contents");
+                markdown.AppendLine();
+                foreach (var classDoc in ns.Value)
+                {
+                    markdown.AppendLine($"- [{classDoc.ClassName}](#{GenerateAnchor(classDoc.ClassName)})");
+                }
+                markdown.AppendLine();
+
                 foreach (var classDoc in ns.Value)
                 {
                     markdown.AppendLine($"## {classDoc.ClassName}");
