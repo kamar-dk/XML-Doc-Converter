@@ -7,9 +7,17 @@ using XmlDocConverter.Models;
 
 namespace XmlDocConverter.Utilities.DocumentationParser
 {
+    /// <summary>
+    /// Parser class for passing XML Documentation to HTML
+    /// Inherits from <seealso cref="Parser"/>
+    /// </summary>
     public class HtmlParser : Parser
     {
-
+        /// <summary>
+        /// Method for generating an HTML document with documentation
+        /// </summary>
+        /// <param name="classDocs">List of <seealso cref="ClassDocumentation"/> with the documentation</param>
+        /// <returns>Returns string contain the HTML code for the document</returns>
         public static string GenerateHtml(List<ClassDocumentation> classDocs)
         {
             var html = new StringBuilder();
