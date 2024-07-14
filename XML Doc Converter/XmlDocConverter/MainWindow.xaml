@@ -11,6 +11,7 @@
             <Button Name="btnOpenFile" Click="btnOpenFile_Click">Open file</Button>
             <Button Name="btnConvertFileToMarkdown" Click="btnConvertFileToMarkdown_Click" Margin="10,0,0,0">Convert to Markdown</Button>
             <Button Name="btnConvertFileToHtml" Click="btnConvertFileToHtml_Click" Margin="10,0,0,0">Convert to HTML</Button>
+            <Button Name="btnSetOutputDirectory"  Click="btnSetOutputDirectory_Click" Margin="10,0,0,0" Content="Set Output Directory"/>
         </WrapPanel>
         <TextBox Name="txtEditor" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" />
     </DockPanel>

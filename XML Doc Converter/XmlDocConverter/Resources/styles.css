@@ -1,0 +1,107 @@
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+    color: #333;
+}
+
+h1, h2, h3 {
+    color: #0056b3;
+}
+
+h1 {
+    border-bottom: 2px solid #0056b3;
+    padding-bottom: 5px;
+}
+
+h2 {
+    border-bottom: 1px solid #0056b3;
+    padding-bottom: 3px;
+    margin-top: 20px;
+}
+
+h3 {
+    margin-top: 15px;
+    font-size: 1.2em;
+}
+
+/* Table styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+/* List styles */
+ul {
+    list-style-type: none;
+    padding-left: 20px;
+}
+
+ul ul {
+    padding-left: 20px;
+    list-style-type: disc;
+}
+
+li {
+    margin-bottom: 5px;
+}
+
+/* Link styles */
+a {
+    text-decoration: none;
+    color: #0056b3;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Code block styles */
+pre, code {
+    background-color: #f8f8f8;
+    padding: 1px;
+    border: 1px solid #ddd;
+    border-radius: 1px;
+}
+
+pre {
+    overflow: auto;
+    white-space: pre-wrap;
+}
+
+/* Paragraph styles */
+p {
+    margin: 10px 0;
+}
+
+p strong {
+    color: #000;
+}
+
+/* HR styles */
+hr {
+    border: 0;
+    border-top: 1px solid #ddd;
+    margin: 20px 0;
+}
+
+/* Container styles */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
