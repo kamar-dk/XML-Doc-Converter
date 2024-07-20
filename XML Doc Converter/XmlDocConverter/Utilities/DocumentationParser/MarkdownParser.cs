@@ -81,12 +81,18 @@ namespace XmlDocConverter.Utilities.DocumentationParser
                     markdown.AppendLine();
                     markdown.AppendLine($"**Namespace:** {classDoc.Namespace}");
                     markdown.AppendLine();
-                    markdown.AppendLine($"**Summary:**");
-                    markdown.AppendLine($"{classDoc.Summary}");
-                    markdown.AppendLine();
-                    markdown.AppendLine($"**Remarks:**");
-                    markdown.AppendLine($"{classDoc.Remarks}");
-                    markdown.AppendLine();
+                    if (!string.IsNullOrEmpty(classDoc.Summary))
+                    {
+                        markdown.AppendLine($"**Summary:**");
+                        markdown.AppendLine($"{classDoc.Summary}");
+                        markdown.AppendLine();
+                    }
+                    if (!string.IsNullOrEmpty(classDoc.Remarks))
+                    {
+                        markdown.AppendLine($"**Remarks:**");
+                        markdown.AppendLine($"{classDoc.Remarks}");
+                        markdown.AppendLine();
+                    }
 
                     if (classDoc.Members.Count > 0)
                     {
@@ -111,12 +117,18 @@ namespace XmlDocConverter.Utilities.DocumentationParser
                         var memberAnchor = GenerateAnchor(memberNameWithoutPrefix);
                         markdown.AppendLine($"### {memberNameWithoutPrefix}");
                         markdown.AppendLine();
-                        markdown.AppendLine($"**Summary:**");
-                        markdown.AppendLine($"{member.Summary}");
-                        markdown.AppendLine();
-                        markdown.AppendLine($"**Remarks:**");
-                        markdown.AppendLine($"{member.Remarks}");
-                        markdown.AppendLine();
+                        if (!string.IsNullOrEmpty(member.Summary))
+                        {
+                            markdown.AppendLine($"**Summary:**");
+                            markdown.AppendLine($"{member.Summary}");
+                            markdown.AppendLine();
+                        }
+                        if (!string.IsNullOrEmpty(member.Remarks))
+                        {
+                            markdown.AppendLine($"**Remarks:**");
+                            markdown.AppendLine($"{member.Remarks}");
+                            markdown.AppendLine();
+                        }
 
                         if (member.Parameters.Count > 0)
                         {
