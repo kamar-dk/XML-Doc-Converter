@@ -69,8 +69,14 @@ namespace XmlDocConverter.Utilities.DocumentationParser
                 {
                     html.AppendLine($"<h3 id=\"{GenerateAnchor(classDoc.ClassName)}\">{classDoc.ClassName}</h3>");
                     html.AppendLine($"<p><strong>Namespace:</strong> {classDoc.Namespace}</p>");
-                    html.AppendLine($"<p><strong>Summary:</strong> {classDoc.Summary}</p>");
-                    html.AppendLine($"<p><strong>Remarks:</strong> {classDoc.Remarks}</p>");
+                    if (!string.IsNullOrEmpty(classDoc.Summary))
+                    {
+                        html.AppendLine($"<p><strong>Summary:</strong> {classDoc.Summary}</p>");
+                    }
+                    if (!string.IsNullOrEmpty(classDoc.Remarks))
+                    {
+                        html.AppendLine($"<p><strong>Remarks:</strong> {classDoc.Remarks}</p>");
+                    }
 
                     if (classDoc.Members.Count > 0)
                     {
@@ -91,8 +97,14 @@ namespace XmlDocConverter.Utilities.DocumentationParser
                         var memberNameWithoutPrefix = member.MemberName?.StartsWith("M:") ?? false ? member.MemberName.Substring(2) : member.MemberName;
                         var memberAnchor = GenerateAnchor(memberNameWithoutPrefix);
                         html.AppendLine($"<h4 id=\"{memberAnchor}\">{memberNameWithoutPrefix}</h4>");
-                        html.AppendLine($"<p><strong>Summary:</strong> {member.Summary}</p>");
-                        html.AppendLine($"<p><strong>Remarks:</strong> {member.Remarks}</p>");
+                        if (!string.IsNullOrEmpty(member.Summary))
+                        {
+                            html.AppendLine($"<p><strong>Summary:</strong> {member.Summary}</p>");
+                        }
+                        if (!string.IsNullOrEmpty(member.Remarks))
+                        {
+                            html.AppendLine($"<p><strong>Remarks:</strong> {member.Remarks}</p>");
+                        }
 
                         if (member.Parameters.Count > 0)
                         {
