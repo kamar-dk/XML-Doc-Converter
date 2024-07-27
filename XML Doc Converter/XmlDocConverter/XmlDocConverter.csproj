@@ -3,11 +3,18 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net7.0-windows</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>XmlDocumentationConverter</PackageId>
+    <Title>XML Documentation Converter</Title>
+    <Version>1.0.0</Version>
+    <Authors>Kasper Martensen - KAMAR</Authors>
+    <PackageTags>XML;documentation;converter</PackageTags>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <AssemblyName>XML Documentation Converter</AssemblyName>
+    <AssemblyName>XmlDocumentationConverter</AssemblyName>
     <ApplicationIcon>Resources\XmlDocConverter.ico</ApplicationIcon>
+    <StartupObject>XmlDocConverter.App</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
