@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Navigation;
 using XmlDocConverter.Models;
 
 namespace XmlDocConverter
@@ -26,8 +23,7 @@ namespace XmlDocConverter
                     Text = classDoc.ClassName,
                     FontSize = 20,
                     FontWeight = FontWeights.Bold,
-                    Margin = new Thickness(0, 10, 0, 5),
-                    Name = GenerateAnchorName(classDoc.ClassName)
+                    Margin = new Thickness(0, 10, 0, 5)
                 };
                 ContentPanel.Children.Add(classTitle);
 
@@ -77,27 +73,6 @@ namespace XmlDocConverter
                     };
                     ContentPanel.Children.Add(membersTitle);
 
-                    var memberList = new ListView
-                    {
-                        Margin = new Thickness(0, 5, 0, 5)
-                    };
-
-                    foreach (var member in classDoc.Members)
-                    {
-                        var memberItem = new ListViewItem();
-
-                        var memberHyperlink = new Hyperlink
-                        {
-                            NavigateUri = new Uri($"#{GenerateAnchorName(member.MemberName)}", UriKind.Relative)
-                        };
-                        memberHyperlink.Inlines.Add(member.MemberName);
-                        memberHyperlink.RequestNavigate += Hyperlink_RequestNavigate;
-
-                        memberItem.Content = new TextBlock { Inlines = { memberHyperlink } };
-                        memberList.Items.Add(memberItem);
-                    }
-                    ContentPanel.Children.Add(memberList);
-
                     foreach (var member in classDoc.Members)
                     {
                         var memberTitle = new TextBlock
@@ -105,8 +80,7 @@ namespace XmlDocConverter
                             Text = member.MemberName,
                             FontSize = 14,
                             FontWeight = FontWeights.Bold,
-                            Margin = new Thickness(0, 5, 0, 0),
-                            Name = GenerateAnchorName(member.MemberName)
+                            Margin = new Thickness(0, 5, 0, 0)
                         };
                         ContentPanel.Children.Add(memberTitle);
 
@@ -247,22 +221,6 @@ namespace XmlDocConverter
 
                 ContentPanel.Children.Add(new Separator());
             }
-        }
-
-        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
-        {
-            var uri = e.Uri.ToString().TrimStart('#');
-            var target = ContentPanel.FindName(uri) as FrameworkElement;
-            if (target != null)
-            {
-                target.BringIntoView();
-            }
-            e.Handled = true;
-        }
-
-        private string GenerateAnchorName(string name)
-        {
-            return name.Replace('.', '_').Replace(':', '_');
         }
     }
 }
