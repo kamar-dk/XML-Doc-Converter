@@ -21,12 +21,14 @@ jobs:
         git config user.email "github-actions@github.com"
 
     - name: Install GitVersion
-      run: dotnet tool install -g GitVersion.Tool
+      run: |
+        dotnet tool install -g GitVersion.Tool
+        echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
 
     - name: Use GitVersion to determine next version
       id: gitversion
       run: |
-        export PATH="$PATH:/home/runner/.dotnet/tools"
+        export PATH="$PATH:$HOME/.dotnet/tools"
         GitVersion /output json > gitversion.json
         VERSION=$(jq -r '.NuGetVersionV2' gitversion.json)
         echo "::set-output name=version::$VERSION"
