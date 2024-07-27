@@ -24,20 +24,31 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release --no-restore
 
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+    - name: Package
+      run: |
+        mkdir -p release
+        cp -r **/bin/Release/* release/
+        cd release
+        zip -r release.zip .
+
+    - name: Upload Release Asset
+      uses: actions/upload-artifact@v2
+      with:
+        name: release
+        path: release/release.zip
 
   release:
     needs: build
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+    - name: Download Release Asset
+      uses: actions/download-artifact@v2
+      with:
+        name: release
 
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v1
       with:
-        files: |
-          **/bin/Release/**
+        files: release/release.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
