@@ -55,5 +55,7 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: release.zip
+        name: XML Documentation Converter ${{ github.ref_name }}
+        body_path: ChangeLogs/${{ github.ref_name }}.md
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
