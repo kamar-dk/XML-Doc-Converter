@@ -42,6 +42,21 @@
             Class for Class Documentation from the XML documentation
             </summary>
         </member>
+        <member name="M:XmlDocConverter.Utilities.DocumentationParser.BitBucketMarkdownParser.GenerateHeader(System.String,System.Int32)">
+            <summary>
+            Overridden method for generating a header with an anchor tag
+            </summary>
+            <param name="header">The header text</param>
+            <param name="level">The level of the header</param>
+            <returns>Returns a string with the anchor tag and the header</returns>
+        </member>
+        <member name="M:XmlDocConverter.Utilities.DocumentationParser.BitBucketMarkdownParser.GenerateMarkdown(System.Collections.Generic.List{XmlDocConverter.Models.ClassDocumentation})">
+            <summary>
+            Overridden method for generation a Markdown document with anchor tags
+            </summary>
+            <param name="classDocs">List of <seealso cref="T:XmlDocConverter.Models.ClassDocumentation"/> with the documentation</param>
+            <returns>Returns a string with the Markdown including anchor tags</returns>
+        </member>
         <member name="T:XmlDocConverter.Utilities.DocumentationParser.HtmlParser">
             <summary>
             Parser class for passing XML Documentation to HTML
@@ -67,6 +82,13 @@
             </summary>
             <param name="classDocs">List of <seealso cref="T:XmlDocConverter.Models.ClassDocumentation"/> with the documentation</param>
             <returns>Returns a string with the Markdown</returns>
+        </member>
+        <member name="M:XmlDocConverter.Utilities.DocumentationParser.MarkdownParser.CleanWhitespace(System.String)">
+            <summary>
+            Method for cleaning whitespace from a string
+            </summary>
+            <param name="input">String that needs to be cleaned</param>
+            <returns>Returns a cleaned string</returns>
         </member>
         <member name="T:XmlDocConverter.Utilities.DocumentationParser.Parser">
             <summary>
