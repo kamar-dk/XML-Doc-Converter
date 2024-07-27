@@ -8,18 +8,26 @@ using XmlDocConverter.Models;
 
 namespace XmlDocConverter.Utilities.DocumentationParser
 {
-    /// <summary>
-    /// Parser class for passing XML Documentation to Markdown
-    /// Inherits from <seealso cref="Parser"/>
-    /// </summary>
-    public class MarkdownParser
+    public class BitBucketMarkdownParser : MarkdownParser
     {
         /// <summary>
-        /// Method for generation a Markdown document
+        /// Overridden method for generating a header with an anchor tag
+        /// </summary>
+        /// <param name="header">The header text</param>
+        /// <param name="level">The level of the header</param>
+        /// <returns>Returns a string with the anchor tag and the header</returns>
+        public new static string GenerateHeader(string header, int level)
+        {
+            var anchor = GenerateAnchor(header);
+            return $"<a name=\"{anchor}\"></a>\n{new string('#', level)} {header}";
+        }
+
+        /// <summary>
+        /// Overridden method for generation a Markdown document with anchor tags
         /// </summary>
         /// <param name="classDocs">List of <seealso cref="ClassDocumentation"/> with the documentation</param>
-        /// <returns>Returns a string with the Markdown</returns>
-        public static string GenerateMarkdown(List<ClassDocumentation> classDocs)
+        /// <returns>Returns a string with the Markdown including anchor tags</returns>
+        public new static string GenerateMarkdown(List<ClassDocumentation> classDocs)
         {
             var markdown = new StringBuilder();
 
@@ -64,7 +72,7 @@ namespace XmlDocConverter.Utilities.DocumentationParser
             // Generate the documentation for each namespace and its classes
             foreach (var ns in sortedNamespaces)
             {
-                markdown.AppendLine($"# {ns}");
+                markdown.AppendLine(GenerateHeader(ns, 1));
                 markdown.AppendLine();
 
                 // Generate the table of contents for the classes in this namespace
@@ -78,7 +86,7 @@ namespace XmlDocConverter.Utilities.DocumentationParser
 
                 foreach (var classDoc in namespaces[ns])
                 {
-                    markdown.AppendLine($"## {classDoc.ClassName}");
+                    markdown.AppendLine(GenerateHeader(classDoc.ClassName, 2));
                     markdown.AppendLine();
                     markdown.AppendLine($"**Namespace:** {classDoc.Namespace}");
                     markdown.AppendLine();
@@ -197,30 +205,6 @@ namespace XmlDocConverter.Utilities.DocumentationParser
             }
 
             return markdown.ToString();
-        }
-
-        public static string GenerateAnchor(string memberName)
-        {
-            // Convert to lowercase, remove invalid characters, and remove spaces
-            return Regex.Replace(memberName.ToLower(), @"[^\w]+", "").Trim();
-        }
-
-        /// <summary>
-        /// Method for cleaning whitespace from a string
-        /// </summary>
-        /// <param name="input">String that needs to be cleaned</param>
-        /// <returns>Returns a cleaned string</returns>
-        public static string CleanWhitespace(string input)
-        {
-            if (string.IsNullOrEmpty(input))
-                return input;
-
-            return Regex.Replace(input, @"\s+", " ").Trim();
-        }
-
-        public static string GenerateHeader(string header, int level)
-        {
-            return $"{new string('#', level)} {header}";
         }
     }
 }
