@@ -15,6 +15,7 @@
     <AssemblyName>XmlDocumentationConverter</AssemblyName>
     <ApplicationIcon>Resources\XmlDocConverter.ico</ApplicationIcon>
     <StartupObject>XmlDocConverter.App</StartupObject>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
   </PropertyGroup>
 
   <ItemGroup>

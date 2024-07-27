@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>XmlDocumentationConverter</id>
+    <version>1.0.0</version>
+    <title>XML Documentation Converter</title>
+    <authors>Kasper Martensen - KAMAR</authors>
+    <description>Package Description</description>
+    <tags>XML documentation converter</tags>
+    <dependencies>
+      <group targetFramework="net7.0-windows7.0">
+        <dependency id="WindowsAPICodePack-Core" version="1.1.2" exclude="Build,Analyzers" />
+        <dependency id="WindowsAPICodePack-Shell" version="1.1.1" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+    <frameworkReferences>
+      <group targetFramework="net7.0-windows7.0">
+        <frameworkReference name="Microsoft.WindowsDesktop.App.WPF" />
+      </group>
+    </frameworkReferences>
+    <contentFiles>
+      <files include="any/net7.0-windows7.0/Resources/styles.css" buildAction="Content" />
+      <files include="any/net7.0-windows7.0/Resources/XmlDocConverter.ico" buildAction="Content" />
+    </contentFiles>
+  </metadata>
+  <files>
+    <file src="C:\Users\Kaspe\Documents\github\XML-Doc-Converter\XML Doc Converter\XmlDocConverter\bin\Release\net7.0-windows\XmlDocumentationConverter.runtimeconfig.json" target="lib\net7.0-windows7.0\XmlDocumentationConverter.runtimeconfig.json" />
+    <file src="C:\Users\Kaspe\Documents\github\XML-Doc-Converter\XML Doc Converter\XmlDocConverter\bin\Release\net7.0-windows\XmlDocumentationConverter.dll" target="lib\net7.0-windows7.0\XmlDocumentationConverter.dll" />
+    <file src="C:\Users\Kaspe\Documents\github\XML-Doc-Converter\XML Doc Converter\XmlDocConverter\bin\Release\net7.0-windows\XmlDocumentationConverter.xml" target="lib\net7.0-windows7.0\XmlDocumentationConverter.xml" />
+    <file src="C:\Users\Kaspe\Documents\github\XML-Doc-Converter\XML Doc Converter\XmlDocConverter\Resources\styles.css" target="content\Resources\styles.css" />
+    <file src="C:\Users\Kaspe\Documents\github\XML-Doc-Converter\XML Doc Converter\XmlDocConverter\Resources\styles.css" target="contentFiles\any\net7.0-windows7.0\Resources\styles.css" />
+    <file src="C:\Users\Kaspe\Documents\github\XML-Doc-Converter\XML Doc Converter\XmlDocConverter\Resources\XmlDocConverter.ico" target="content\Resources\XmlDocConverter.ico" />
+    <file src="C:\Users\Kaspe\Documents\github\XML-Doc-Converter\XML Doc Converter\XmlDocConverter\Resources\XmlDocConverter.ico" target="contentFiles\any\net7.0-windows7.0\Resources\XmlDocConverter.ico" />
+  </files>
+</package>

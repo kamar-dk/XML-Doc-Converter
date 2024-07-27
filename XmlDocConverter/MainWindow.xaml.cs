@@ -16,7 +16,7 @@ namespace XmlDocConverter
         private string selectedFileName;
         private string outputDirectory;
 
-        public MainWindow()
+        public MainWindow() 
         {
             InitializeComponent();
         }
