@@ -26,8 +26,10 @@ jobs:
 
     - name: Package
       run: |
+        VERSION=${GITHUB_REF#refs/tags/}
         mkdir -p release
-        cp -r **/bin/Release/* release/
+        cp -r **/bin/Release/net7.0-windows release/
+        mv release/net7.0-windows release/XML_Documentation_Converter-$VERSION
         cd release
         zip -r ../release.zip .
         cd ..
