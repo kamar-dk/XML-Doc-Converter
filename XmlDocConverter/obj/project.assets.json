@@ -66,11 +66,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Kaspe\\Documents\\github\\test\\XmlDocConverter\\XmlDocConverter.csproj",
+      "projectUniqueName": "C:\\Users\\Kaspe\\Documents\\github\\XML-Doc-Converter\\XmlDocConverter\\XmlDocConverter.csproj",
       "projectName": "XmlDocumentationConverter",
-      "projectPath": "C:\\Users\\Kaspe\\Documents\\github\\test\\XmlDocConverter\\XmlDocConverter.csproj",
+      "projectPath": "C:\\Users\\Kaspe\\Documents\\github\\XML-Doc-Converter\\XmlDocConverter\\XmlDocConverter.csproj",
       "packagesPath": "C:\\Users\\Kaspe\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Kaspe\\Documents\\github\\test\\XmlDocConverter\\obj\\",
+      "outputPath": "C:\\Users\\Kaspe\\Documents\\github\\XML-Doc-Converter\\XmlDocConverter\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Users\\Kaspe\\AppData\\Roaming\\Godot\\mono\\GodotNuGetFallbackFolder"

@@ -1,0 +1,40 @@
+name: Bump Version and Create Tag
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  bump-version:
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.ref == 'development'
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup Git
+      run: |
+        git config user.name "github-actions"
+        git config user.email "github-actions@github.com"
+
+    - name: Install GitVersion
+      run: dotnet tool install -g GitVersion.Tool
+
+    - name: Use GitVersion to determine next version
+      id: gitversion
+      run: |
+        export PATH="$PATH:/home/runner/.dotnet/tools"
+        GitVersion /output json > gitversion.json
+        VERSION=$(jq -r '.NuGetVersionV2' gitversion.json)
+        echo "::set-output name=version::$VERSION"
+
+    - name: Create and push tag
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        VERSION=${{ steps.gitversion.outputs.version }}
+        git tag "v$VERSION"
+        git push origin "v$VERSION"

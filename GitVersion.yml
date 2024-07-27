@@ -1,0 +1,17 @@
+mode: Mainline
+branches:
+  main:
+    regex: master
+    is-release-branch: true
+    is-mainline: true
+    tag: ''
+  develop:
+    regex: dev(elop)?(ment)?
+    source-branches: []
+    tracks-release-branches: false
+    is-mainline: false
+    tag: '-beta'
+ignore:
+  sha: []
+commit-message-incrementing: Enabled
+commits-before-version-source: 1
