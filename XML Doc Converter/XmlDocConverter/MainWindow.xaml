@@ -10,6 +10,7 @@
         <WrapPanel HorizontalAlignment="Center" DockPanel.Dock="Top" Margin="0,0,0,10">
             <Button Name="btnOpenFile" Click="btnOpenFile_Click">Open file</Button>
             <Button Name="btnConvertFileToMarkdown" Click="btnConvertFileToMarkdown_Click" Margin="10,0,0,0">Convert to Markdown</Button>
+            <Button Name="btnConvertFileToBitbucketMarkdown" Click="btnConvertFileToBitbucketMarkdown_Click" Margin="10,0,0,0">Convert to Bitbucket Markdown</Button>
             <Button Name="btnConvertFileToHtml" Click="btnConvertFileToHtml_Click" Margin="10,0,0,0">Convert to HTML</Button>
             <Button Name="btnSetOutputDirectory"  Click="btnSetOutputDirectory_Click" Margin="10,0,0,0" Content="Set Output Directory"/>
             <Button Name="btnOpenOutputFolder" Click="btnOpenOutputFolder_Click" Margin="10,0,0,0" Content="Open Output Folder"/>

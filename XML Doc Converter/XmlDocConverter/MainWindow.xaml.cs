@@ -55,6 +55,27 @@ namespace XmlDocConverter
             }
         }
 
+        private void btnConvertFileToBitbucketMarkdown_Click(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(selectedFilePath))
+            {
+                XDocument xmlDoc = XDocument.Load(selectedFilePath);
+                var classDocs = XmlParser.ParseDocumentation(xmlDoc);
+                string markdownContent = BitBucketMarkdownParser.GenerateMarkdown(classDocs);
+
+                string markdownPath = Path.Combine(outputDirectory, "BitbucketDocumentation.md");
+                File.WriteAllText(markdownPath, markdownContent);
+
+                MessageBox.Show($"Markdown file created at {markdownPath}", "Conversion Complete", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                MessageBox.Show("Please select an XML file first.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        
+
         private void btnConvertFileToHtml_Click(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(selectedFilePath) && !string.IsNullOrEmpty(outputDirectory))
