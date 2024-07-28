@@ -199,6 +199,11 @@ namespace XmlDocConverter.Utilities.DocumentationParser
             return markdown.ToString();
         }
 
+        /// <summary>
+        /// Method for generating an anchor for a Markdown header
+        /// </summary>
+        /// <param name="memberName">String with the member name</param>
+        /// <returns>Returns a string with the Ancor for Markdown formatted correctly</returns>
         public static string GenerateAnchor(string memberName)
         {
             // Convert to lowercase, remove invalid characters, and remove spaces
