@@ -58,8 +58,8 @@ jobs:
 
         # Windows (WPF and Console)
         mkdir -p release/windows
-        cp -r XmlDocConverter/bin/Release/net7.0-windows/win-x64/* release/windows/
-        cp -r XmlDocConverterConsole/bin/Release/net7.0-windows/win-x64/* release/windows/
+        cp -r XmlDocConverter/bin/Release/net7.0-windows release/windows/
+        cp -r XmlDocConverterConsole/bin/Release/net7.0/win-x64/* release/windows/
         mv release/windows release/XML_Documentation_Converter-${VERSION}-win
         cd release
         zip -r XML_Documentation_Converter-${VERSION}-win.zip XML_Documentation_Converter-${VERSION}-win
