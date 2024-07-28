@@ -21,15 +21,19 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
 
-    # Build for Windows (XmlDocConverter)
-    - name: Build for Windows
+    # Build WPF for Windows
+    - name: Build WPF for Windows
       run: dotnet publish XmlDocConverter/XmlDocConverter.csproj -c Release -r win-x64 --self-contained
 
-    # Build for Linux (XmlDocConverterConsole)
+    # Build Console for Windows
+    - name: Build Console for Windows
+      run: dotnet publish XmlDocConverterConsole/XmlDocConverterConsole.csproj -c Release -r win-x64 --self-contained
+
+    # Build Console for Linux
     - name: Build for Linux
       run: dotnet publish XmlDocConverterConsole/XmlDocConverterConsole.csproj -c Release -r linux-x64 --self-contained
 
-    # Build for macOS (XmlDocConverterConsole)
+    # Build Console for macOS
     - name: Build for macOS
       run: dotnet publish XmlDocConverterConsole/XmlDocConverterConsole.csproj -c Release -r osx-x64 --self-contained
 
@@ -39,18 +43,20 @@ jobs:
         VERSION=${GITHUB_REF#refs/tags/}
         mkdir -p release
 
-        # Windows
+        # Windows (WPF and Console)
         mkdir -p release/windows
-        cp -r XmlDocConverter/bin/Release/net7.0/win-x64 release/windows/
-        mv release/windows/win-x64 release/windows/XML_Documentation_Converter-${VERSION}-win
+        cp -r XmlDocConverter/bin/Release/net7.0/win-x64 release/windows/WPF
+        cp -r XmlDocConverterConsole/bin/Release/net7.0/win-x64 release/windows/Console
+        mv release/windows/WPF release/windows/XML_Documentation_Converter_WPF-${VERSION}-win
+        mv release/windows/Console release/windows/XML_Documentation_Converter_Console-${VERSION}-win
         cd release/windows
-        zip -r ../../XML_Documentation_Converter-${VERSION}-win.zip .
+        zip -r ../../XML_Documentation_Converter_Windows-${VERSION}.zip .
         cd ../..
 
         # Linux
         mkdir -p release/linux
         cp -r XmlDocConverterConsole/bin/Release/net7.0/linux-x64 release/linux/
-        mv release/linux/linux-x64 release/linux/XML_Documentation_Converter-${VERSION}-linux
+        mv release/linux/linux-x64 release/linux/XML_Documentation_Converter_Console-${VERSION}-linux
         cd release/linux
         zip -r ../../XML_Documentation_Converter-${VERSION}-linux.zip .
         cd ../..
@@ -58,7 +64,7 @@ jobs:
         # macOS
         mkdir -p release/macos
         cp -r XmlDocConverterConsole/bin/Release/net7.0/osx-x64 release/macos/
-        mv release/macos/osx-x64 release/macos/XML_Documentation_Converter-${VERSION}-macos
+        mv release/macos/osx-x64 release/macos/XML_Documentation_Converter_Console-${VERSION}-macos
         cd release/macos
         zip -r ../../XML_Documentation_Converter-${VERSION}-macos.zip .
         cd ../..
@@ -66,17 +72,19 @@ jobs:
     - name: Debug - List Root Directory
       run: ls -l
 
-    - name: Upload Release Assets
+    - name: Upload Release Assets (Windows)
       uses: actions/upload-artifact@v2
       with:
         name: windows-release
-        path: XML_Documentation_Converter-${VERSION}-win.zip
-    - name: Upload Release Assets
+        path: XML_Documentation_Converter_Windows-${VERSION}.zip
+
+    - name: Upload Release Assets (Linux)
       uses: actions/upload-artifact@v2
       with:
         name: linux-release
         path: XML_Documentation_Converter-${VERSION}-linux.zip
-    - name: Upload Release Assets
+
+    - name: Upload Release Assets (macOS)
       uses: actions/upload-artifact@v2
       with:
         name: macos-release
@@ -89,17 +97,17 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Download Release Assets
+    - name: Download Release Assets (Windows)
       uses: actions/download-artifact@v2
       with:
         name: windows-release
 
-    - name: Download Release Assets
+    - name: Download Release Assets (Linux)
       uses: actions/download-artifact@v2
       with:
         name: linux-release
 
-    - name: Download Release Assets
+    - name: Download Release Assets (macOS)
       uses: actions/download-artifact@v2
       with:
         name: macos-release
@@ -108,7 +116,7 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          XML_Documentation_Converter-${{ github.ref_name }}-win.zip
+          XML_Documentation_Converter_Windows-${{ github.ref_name }}.zip
           XML_Documentation_Converter-${{ github.ref_name }}-linux.zip
           XML_Documentation_Converter-${{ github.ref_name }}-macos.zip
         name: ${{ github.ref_name }} XML Documentation Converter 
