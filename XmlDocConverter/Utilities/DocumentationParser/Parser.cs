@@ -15,6 +15,11 @@ namespace XmlDocConverter.Utilities.DocumentationParser
     /// </summary>
     public class Parser
     {
+        /// <summary>
+        /// Method for generating an anchor tag from a member name
+        /// </summary>
+        /// <param name="memberName"></param>
+        /// <returns></returns>
         public static string GenerateAnchor(string memberName)
         {
             // Convert to lowercase, remove invalid characters, and remove spaces
