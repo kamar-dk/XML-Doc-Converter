@@ -88,19 +88,19 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: windows-release
-        path: release/XML_Documentation_Converter-${VERSION}-win.zip
+        path: release/XML_Documentation_Converter-${{ github.ref_name }}-win.zip
 
     - name: Upload Release Assets (Linux)
       uses: actions/upload-artifact@v2
       with:
         name: linux-release
-        path: release/XML_Documentation_Converter-${VERSION}-linux.zip
+        path: release/XML_Documentation_Converter-${{ github.ref_name }}-linux.zip
 
     - name: Upload Release Assets (macOS)
       uses: actions/upload-artifact@v2
       with:
         name: macos-release
-        path: release/XML_Documentation_Converter-${VERSION}-macos.zip
+        path: release/XML_Documentation_Converter-${{ github.ref_name }}-macos.zip
 
   release:
     needs: build
@@ -135,3 +135,5 @@ jobs:
         body_path: ChangeLogs/${{ github.ref_name }}.md
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+        
