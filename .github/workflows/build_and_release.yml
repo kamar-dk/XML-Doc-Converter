@@ -21,17 +21,17 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
 
-    # Build for Windows
+    # Build for Windows (XmlDocConverter)
     - name: Build for Windows
-      run: dotnet publish -c Release -r win-x64 --self-contained
+      run: dotnet publish XmlDocConverter/XmlDocConverter.csproj -c Release -r win-x64 --self-contained
 
-    # Build for Linux
+    # Build for Linux (XmlDocConverterConsole)
     - name: Build for Linux
-      run: dotnet publish -c Release -r linux-x64 --self-contained
+      run: dotnet publish XmlDocConverterConsole/XmlDocConverterConsole.csproj -c Release -r linux-x64 --self-contained
 
-    # Build for macOS
+    # Build for macOS (XmlDocConverterConsole)
     - name: Build for macOS
-      run: dotnet publish -c Release -r osx-x64 --self-contained
+      run: dotnet publish XmlDocConverterConsole/XmlDocConverterConsole.csproj -c Release -r osx-x64 --self-contained
 
     # Package all builds
     - name: Package
@@ -41,7 +41,7 @@ jobs:
 
         # Windows
         mkdir -p release/windows
-        cp -r **/bin/Release/net7.0/win-x64 release/windows/
+        cp -r XmlDocConverter/bin/Release/net7.0/win-x64 release/windows/
         mv release/windows/win-x64 release/windows/XML_Documentation_Converter-${VERSION}-win
         cd release/windows
         zip -r ../../XML_Documentation_Converter-${VERSION}-win.zip .
@@ -49,7 +49,7 @@ jobs:
 
         # Linux
         mkdir -p release/linux
-        cp -r **/bin/Release/net7.0/linux-x64 release/linux/
+        cp -r XmlDocConverterConsole/bin/Release/net7.0/linux-x64 release/linux/
         mv release/linux/linux-x64 release/linux/XML_Documentation_Converter-${VERSION}-linux
         cd release/linux
         zip -r ../../XML_Documentation_Converter-${VERSION}-linux.zip .
@@ -57,7 +57,7 @@ jobs:
 
         # macOS
         mkdir -p release/macos
-        cp -r **/bin/Release/net7.0/osx-x64 release/macos/
+        cp -r XmlDocConverterConsole/bin/Release/net7.0/osx-x64 release/macos/
         mv release/macos/osx-x64 release/macos/XML_Documentation_Converter-${VERSION}-macos
         cd release/macos
         zip -r ../../XML_Documentation_Converter-${VERSION}-macos.zip .
