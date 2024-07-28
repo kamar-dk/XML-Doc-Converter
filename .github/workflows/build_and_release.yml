@@ -1,4 +1,4 @@
-name: Build and Release new
+name: Build and Release
 
 on:
   push:
@@ -46,6 +46,9 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
     - name: Download Release Asset
       uses: actions/download-artifact@v2
       with:
