@@ -8,6 +8,10 @@ namespace XmlDocConverter.Models
     public class MemberDocumentation
     {
         /// <summary>
+        /// Type of the Member (Method, Property, Field, etc.)
+        /// </summary>
+        public string MemberType { get; set; }
+        /// <summary>
         /// Name of the Member
         /// </summary>
         public string MemberName { get; set; }
