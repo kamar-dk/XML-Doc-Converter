@@ -86,33 +86,10 @@ namespace XmlDocConverter.Utilities.DocumentationParser
         }
 
         /// <summary>
-        /// Parses the given <see cref="XElement"/> and extracts the text content,
-        /// including handling of <c>paramref</c> elements by formatting them accordingly.
+        ///  Method for parsing the XML documentation to a string
         /// </summary>
-        /// <param name="element">The XML element to parse. Can be <c>null</c>.</param>
-        /// <returns>
-        /// A <see cref="string"/> containing the concatenated text content of the XML element,
-        /// with any <c>paramref</c> elements' names enclosed in backticks. If the input element is <c>null</c>,
-        /// an empty string is returned.
-        /// </returns>
-        /// <example>
-        /// Given the following XML element:
-        /// <code>
-        /// <example>
-        /// <doc>
-        ///   This is an <paramref name="example"/> of XML documentation.
-        /// </doc>
-        /// </example>
-        /// </code>
-        /// The method will return:
-        /// <code>
-        /// "This is an `example` of XML documentation."
-        /// </code>
-        /// </example>
-        /// <remarks>
-        /// This method processes the child nodes of the provided <see cref="XElement"/>.
-        /// It handles text nodes and <c>paramref</c> elements specifically, while ignoring other types of nodes.
-        /// </remarks> 
+        /// <param name="element">Element from the XML documentation</param>
+        /// <returns>Returns the text of the XML Documentation</returns>
         private static string ParseXmlDocumentation(XElement element)
         {
             if (element == null)
