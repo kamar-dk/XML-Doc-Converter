@@ -173,6 +173,11 @@ namespace XmlDocConverter.Utilities.DocumentationParser
             return html.ToString();
         }
 
+        /// <summary>
+        /// Generates a list of namespaces
+        /// </summary>
+        /// <param name="html">The StringBuilder containing the HTML</param>
+        /// <param name="namespaces">List of ClassDocumentation containing the namespaces</param>
         private static void GenerateNamespaceList(StringBuilder html, Dictionary<string, List<ClassDocumentation>> namespaces)
         {
             var nsHierarchy = BuildNamespaceHierarchy(namespaces.Keys);
@@ -183,6 +188,11 @@ namespace XmlDocConverter.Utilities.DocumentationParser
             }
         }
 
+        /// <summary>
+        /// Generates a node for a namespace
+        /// </summary>
+        /// <param name="html">The StringBuilder containing the HTML</param>
+        /// <param name="nsNode">NamespaceNode with the node for the HTML</param>
         private static void GenerateNamespaceNode(StringBuilder html, NamespaceNode nsNode)
         {
             html.AppendLine($"<li><a href=\"#{GenerateAnchor(nsNode.FullName)}\">{nsNode.Name}</a></li>");
@@ -198,6 +208,11 @@ namespace XmlDocConverter.Utilities.DocumentationParser
             }
         }
 
+        /// <summary>
+        /// Builds a hierarchy of namespace nodes
+        /// </summary>
+        /// <param name="namespaces">Ienumerrable of string with the namespaces</param>
+        /// <returns>Returns a list of NamespaceNode's</returns>
         private static List<NamespaceNode> BuildNamespaceHierarchy(IEnumerable<string> namespaces)
         {
             var rootNodes = new List<NamespaceNode>();
@@ -236,6 +251,9 @@ namespace XmlDocConverter.Utilities.DocumentationParser
             return rootNodes;
         }
 
+        /// <summary>
+        /// Class for representing a namespace node
+        /// </summary>
         private class NamespaceNode
         {
             public string Name { get; set; }
@@ -243,6 +261,11 @@ namespace XmlDocConverter.Utilities.DocumentationParser
             public List<NamespaceNode> Children { get; } = new List<NamespaceNode>();
         }
 
+        /// <summary>
+        /// Method for generating an anchor tag
+        /// </summary>
+        /// <param name="name">Name of the Anchor</param>
+        /// <returns>a string that is formatted so it can be used in at HTML Anchor</returns>
         private static string GenerateAnchor(string name)
         {
             return name.Replace('.', '-');
