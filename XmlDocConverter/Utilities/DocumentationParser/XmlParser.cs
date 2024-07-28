@@ -18,7 +18,7 @@ namespace XmlDocConverter.Utilities.DocumentationParser
         /// Method for parsing the XML documentation file to C# classes
         /// </summary>
         /// <param name="xmlDoc">XML Document loaded in from the UI</param>
-        /// <returns>Returns a list of <seealso cref="ClassDocumentation"/><</returns>
+        /// <returns>Returns a list of <seealso cref="ClassDocumentation"/></returns>
         public static List<ClassDocumentation> ParseDocumentation(XDocument xmlDoc)
         {
             var classDocs = new List<ClassDocumentation>();
@@ -39,12 +39,25 @@ namespace XmlDocConverter.Utilities.DocumentationParser
                     Remarks = CleanWhitespace(ParseXmlDocumentation(classElement.Element("remarks")))
                 };
 
-                var memberElements = members.Where(m => m.Attribute("name")?.Value.StartsWith($"M:{fullClassName}.") ?? false);
+                // Include properties, fields, and methods
+                var memberElements = members.Where(m =>
+                    m.Attribute("name")?.Value.StartsWith($"M:{fullClassName}.") == true ||
+                    m.Attribute("name")?.Value.StartsWith($"P:{fullClassName}.") == true ||
+                    m.Attribute("name")?.Value.StartsWith($"F:{fullClassName}.") == true);
 
                 foreach (var memberElement in memberElements)
                 {
+                    var memberType = memberElement.Attribute("name")?.Value[0] switch
+                    {
+                        'M' => "Method",
+                        'P' => "Property",
+                        'F' => "Field",
+                        _ => "Unknown"
+                    };
+
                     var memberDoc = new MemberDocumentation
                     {
+                        MemberType = memberType,
                         MemberName = memberElement.Attribute("name")?.Value,
                         Summary = CleanWhitespace(ParseXmlDocumentation(memberElement.Element("summary"))),
                         Remarks = CleanWhitespace(ParseXmlDocumentation(memberElement.Element("remarks"))),
@@ -95,7 +108,8 @@ namespace XmlDocConverter.Utilities.DocumentationParser
             if (element == null)
                 return string.Empty;
 
-            string text = string.Join("", element.Nodes().Select(node => {
+            string text = string.Join("", element.Nodes().Select(node =>
+            {
                 if (node is XText textNode)
                 {
                     return textNode.Value;
