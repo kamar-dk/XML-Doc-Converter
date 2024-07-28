@@ -8,6 +8,7 @@ I've made a generic XML Document with documentation over some program, to show y
 #### Markdown Showcase
 The markdown is ofcause shown in plain markdown
 ![image](https://github.com/user-attachments/assets/06eed3b2-6a6b-4ea0-aabd-84cfa8481cd8)
+
 I've used Visual Studio Code to preview it, and this is how it turns out
 ![image](https://github.com/user-attachments/assets/66ed7694-56c6-4d03-a4fd-89090a0d4836)
 
@@ -18,6 +19,7 @@ I've seen a bit of JavaDoc and liked how that looked in an HTML format, therefor
 ## How to use the program
 When you open the program you will see this screen
 ![image](https://github.com/user-attachments/assets/39542e10-73bf-4418-8e4c-e0c9c832e432)
+
 By clicking on the button "Open File" you will get a file selection window, where you can find the XML file you want to convert.
 Before converting it, you can choose an output folder, by default the output folder is the folder where the XML file was selected. You can double check the output folder by the text that will be shown in "Output Directory: "
 
