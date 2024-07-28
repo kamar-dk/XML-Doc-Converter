@@ -8,6 +8,9 @@ using XmlDocConverter.Models;
 
 namespace XmlDocConverter.Utilities.DocumentationParser
 {
+    /// <summary>
+    /// Markdown Parser that generates Markdown where the anchor tags are compatible with BitBucket
+    /// </summary>
     public class BitBucketMarkdownParser : MarkdownParser
     {
         /// <summary>
