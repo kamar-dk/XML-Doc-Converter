@@ -53,32 +53,32 @@ jobs:
     # Package all builds
     - name: Package
       run: |
-        VERSION=${GITHUB_REF#refs/tags/}
+        TAG_NAME=${GITHUB_REF#refs/tags/}
         mkdir -p release
 
         # Windows (WPF and Console)
         mkdir -p release/windows
         cp -r XmlDocConverter/bin/Release/net7.0-windows/* release/windows/
         cp -r XmlDocConverterConsole/bin/Release/net7.0/win-x64/* release/windows/
-        mv release/windows release/XML_Documentation_Converter-${VERSION}-win
+        mv release/windows release/XML_Documentation_Converter-${TAG_NAME}-win
         cd release
-        zip -r XML_Documentation_Converter-${VERSION}-win.zip XML_Documentation_Converter-${VERSION}-win
+        zip -r XML_Documentation_Converter-${TAG_NAME}-win.zip XML_Documentation_Converter-${TAG_NAME}-win
         cd ..
 
         # Linux
         mkdir -p release/linux
         cp -r XmlDocConverterConsole/bin/Release/net7.0/linux-x64/* release/linux/
-        mv release/linux release/XML_Documentation_Converter-${VERSION}-linux
+        mv release/linux release/XML_Documentation_Converter-${TAG_NAME}-linux
         cd release
-        zip -r XML_Documentation_Converter-${VERSION}-linux.zip XML_Documentation_Converter-${VERSION}-linux
+        zip -r XML_Documentation_Converter-${TAG_NAME}-linux.zip XML_Documentation_Converter-${TAG_NAME}-linux
         cd ..
 
         # macOS
         mkdir -p release/macos
         cp -r XmlDocConverterConsole/bin/Release/net7.0/osx-x64/* release/macos/
-        mv release/macos release/XML_Documentation_Converter-${VERSION}-macos
+        mv release/macos release/XML_Documentation_Converter-${TAG_NAME}-macos
         cd release
-        zip -r XML_Documentation_Converter-${VERSION}-macos.zip XML_Documentation_Converter-${VERSION}-macos
+        zip -r XML_Documentation_Converter-${TAG_NAME}-macos.zip XML_Documentation_Converter-${TAG_NAME}-macos
         cd ..
 
     - name: Debug - List Root Directory
@@ -91,23 +91,24 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: windows-release
-        path: release/XML_Documentation_Converter-${VERSION}-win.zip
+        path: release/XML_Documentation_Converter-${{ github.ref_name }}-win.zip
 
     - name: Upload Release Assets (Linux)
       uses: actions/upload-artifact@v2
       with:
         name: linux-release
-        path: release/XML_Documentation_Converter-${VERSION}-linux.zip
+        path: release/XML_Documentation_Converter-${{ github.ref_name }}-linux.zip
 
     - name: Upload Release Assets (macOS)
       uses: actions/upload-artifact@v2
       with:
         name: macos-release
-        path: release/XML_Documentation_Converter-${VERSION}-macos.zip
+        path: release/XML_Documentation_Converter-${{ github.ref_name }}-macos.zip
 
   release:
     needs: build
     runs-on: ubuntu-latest
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -116,30 +117,30 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: windows-release
-        path: ./
+        path: ./release
 
     - name: Download Release Assets (Linux)
       uses: actions/download-artifact@v2
       with:
         name: linux-release
-        path: ./
+        path: ./release
 
     - name: Download Release Assets (macOS)
       uses: actions/download-artifact@v2
       with:
         name: macos-release
-        path: ./
+        path: ./release
 
     - name: Debug - List Downloaded Artifacts
-      run: ls -l
+      run: ls -l release
 
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          XML_Documentation_Converter-${{ github.ref_name }}-win.zip
-          XML_Documentation_Converter-${{ github.ref_name }}-linux.zip
-          XML_Documentation_Converter-${{ github.ref_name }}-macos.zip
+          release/XML_Documentation_Converter-${{ github.ref_name }}-win.zip
+          release/XML_Documentation_Converter-${{ github.ref_name }}-linux.zip
+          release/XML_Documentation_Converter-${{ github.ref_name }}-macos.zip
         name: ${{ github.ref_name }} XML Documentation Converter 
         body_path: ChangeLogs/${{ github.ref_name }}.md
       env:
