@@ -31,11 +31,11 @@ jobs:
 
     # Build Console for Linux
     - name: Build for Linux
-      run: dotnet publish XmlDocConverterConsole/XmlDocConverterConsole.csproj -c Release -r linux-x64 --self-contained -o ../output/linux
+      run: dotnet publish XmlDocConverterConsole/XmlDocConverterConsole.csproj -c Release -r linux-x64 --self-contained 
 
     # Build Console for macOS
     - name: Build for macOS
-      run: dotnet publish XmlDocConverterConsole/XmlDocConverterConsole.csproj -c Release -r osx-x64 --self-contained -o ../output/macos
+      run: dotnet publish XmlDocConverterConsole/XmlDocConverterConsole.csproj -c Release -r osx-x64 --self-contained
 
     # Verify the output directories
     - name: Verify Windows WPF Build Output
@@ -45,10 +45,10 @@ jobs:
       run: ls -R XmlDocConverterConsole/bin/Release
 
     - name: Verify Linux Build Output
-      run: ls -R output/linux
+      run: ls -R XmlDocConverterConsole/bin/Release
 
     - name: Verify macOS Build Output
-      run: ls -R output/macos
+      run: ls -R XmlDocConverterConsole/bin/Release
 
     # Package all builds
     - name: Package
@@ -74,7 +74,7 @@ jobs:
 
         # Linux
         mkdir -p release/linux
-        cp -r output/linux/* release/linux/
+        cp -r XmlDocConverterConsole/bin/Release/net7.0/linux-x64/publish/* release/linux/
         mv release/linux release/XML_Documentation_Converter-${TAG_NAME}-linux
         cd release
         zip -r XML_Documentation_Converter-${TAG_NAME}-linux.zip XML_Documentation_Converter-${TAG_NAME}-linux
@@ -82,7 +82,7 @@ jobs:
 
         # macOS
         mkdir -p release/macos
-        cp -r output/macos/* release/macos/
+        cp -r XmlDocConverterConsole/bin/Release/net7.0/osx-x64/publish/* release/macos/
         mv release/macos release/XML_Documentation_Converter-${TAG_NAME}-macos
         cd release
         zip -r XML_Documentation_Converter-${TAG_NAME}-macos.zip XML_Documentation_Converter-${TAG_NAME}-macos
