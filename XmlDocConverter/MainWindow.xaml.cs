@@ -2,11 +2,10 @@
 using System.IO;
 using System.Windows;
 using System.Xml.Linq;
-using XmlDocConverter.Utilities;
-using XmlDocConverter.Utilities.DocumentationParser;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Diagnostics;
+using XmlDocConverter.Utilities.DocumentationParser;
 
 namespace XmlDocConverter
 {
