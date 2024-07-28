@@ -58,7 +58,7 @@ jobs:
 
         # Windows WPF
         mkdir -p release/windows-wpf
-        cp -r XmlDocConverter/bin/Release/net7.0-windows/* release/windows-wpf/
+        cp -r XmlDocConverter/bin/Release/net7.0-windows/win-x64/publish/* release/windows-wpf/
         mv release/windows-wpf release/XML_Documentation_Converter-${TAG_NAME}-win-wpf
         cd release
         zip -r XML_Documentation_Converter-${TAG_NAME}-win-wpf.zip XML_Documentation_Converter-${TAG_NAME}-win-wpf
@@ -66,7 +66,7 @@ jobs:
 
         # Windows Console
         mkdir -p release/windows-console
-        cp -r XmlDocConverterConsole/bin/Release/net7.0/win-x64/* release/windows-console/
+        cp -r XmlDocConverterConsole/bin/Release/net7.0/win-x64/publish/* release/windows-console/
         mv release/windows-console release/XML_Documentation_Converter-${TAG_NAME}-win-console
         cd release
         zip -r XML_Documentation_Converter-${TAG_NAME}-win-console.zip XML_Documentation_Converter-${TAG_NAME}-win-console
