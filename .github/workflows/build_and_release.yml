@@ -37,6 +37,19 @@ jobs:
     - name: Build for macOS
       run: dotnet publish XmlDocConverterConsole/XmlDocConverterConsole.csproj -c Release -r osx-x64 --self-contained
 
+    # Verify the output directories
+    - name: Verify Windows WPF Build Output
+      run: ls -R XmlDocConverter/bin/Release
+
+    - name: Verify Windows Console Build Output
+      run: ls -R XmlDocConverterConsole/bin/Release
+
+    - name: Verify Linux Build Output
+      run: ls -R XmlDocConverterConsole/bin/Release
+
+    - name: Verify macOS Build Output
+      run: ls -R XmlDocConverterConsole/bin/Release
+
     # Package all builds
     - name: Package
       run: |
@@ -70,6 +83,9 @@ jobs:
 
     - name: Debug - List Root Directory
       run: ls -l
+
+    - name: Debug - List Release Directory
+      run: ls -l release
 
     - name: Upload Release Assets (Windows)
       uses: actions/upload-artifact@v2
@@ -125,4 +141,3 @@ jobs:
         body_path: ChangeLogs/${{ github.ref_name }}.md
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
