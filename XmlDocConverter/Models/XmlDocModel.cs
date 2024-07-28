@@ -7,14 +7,41 @@ namespace XmlDocConverter.Models
     /// </summary>
     public class MemberDocumentation
     {
+        /// <summary>
+        /// Name of the Member
+        /// </summary>
         public string MemberName { get; set; }
+        /// <summary>
+        /// Summary of the Member
+        /// </summary>
         public string Summary { get; set; }
+        /// <summary>
+        /// Remarks of the Member
+        /// </summary>
         public string Remarks { get; set; }
+        /// <summary>
+        /// Returns of the Member
+        /// </summary>
         public string Returns { get; set; }
+        /// <summary>
+        /// List of SeeAlso references
+        /// </summary>
         public List<string> SeeAlso { get; set; } = new List<string>();
+        /// <summary>
+        /// List of Examples
+        /// </summary>
         public List<string> Examples { get; set; } = new List<string>();
+        /// <summary>
+        /// List of Exceptions
+        /// </summary>
         public Dictionary<string, string> Parameters { get; set; } = new Dictionary<string, string>();
+        /// <summary>
+        /// List of Type Parameters
+        /// </summary>
         public Dictionary<string, string> TypeParameters { get; set; } = new Dictionary<string, string>();
+        /// <summary>
+        /// Dictorynary of Exceptions
+        /// </summary>
         public Dictionary<string, string> Exceptions { get; set; } = new Dictionary<string, string>();
     }
 
