@@ -36,6 +36,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\XmlDocConverterLibary\XmlDocConverterLibary.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Resources\XmlDocConverter.ico" />
   </ItemGroup>
 

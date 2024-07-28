@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace XmlDocConverter.Models
+namespace XmlDocConverterLibary.Models
 {
     /// <summary>
     /// Class for Member documentation from the XML documentation

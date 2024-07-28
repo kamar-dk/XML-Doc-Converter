@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using XmlDocConverter.Models;
+using XmlDocConverterLibary.Models;
 
-namespace XmlDocConverter.Utilities.DocumentationParser
+namespace XmlDocConverterLibary.Utilities.DocumentationParser
 {
     /// <summary>
     /// Parser class for passing XML Documentation to HTML

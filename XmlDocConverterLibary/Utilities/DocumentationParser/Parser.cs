@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace XmlDocConverter.Utilities.DocumentationParser
+namespace XmlDocConverterLibary.Utilities.DocumentationParser
 {
     /// <summary>
     /// Class with Utility Methods for the differet Parser classes

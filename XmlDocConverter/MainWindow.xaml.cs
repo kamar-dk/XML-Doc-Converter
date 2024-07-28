@@ -5,7 +5,7 @@ using System.Xml.Linq;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Diagnostics;
-using XmlDocConverter.Utilities.DocumentationParser;
+using XmlDocConverterLibary.Utilities.DocumentationParser;
 
 namespace XmlDocConverter
 {

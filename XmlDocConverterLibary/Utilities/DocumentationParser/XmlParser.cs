@@ -5,9 +5,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using XmlDocConverter.Models;
+using XmlDocConverterLibary.Models;
 
-namespace XmlDocConverter.Utilities.DocumentationParser
+namespace XmlDocConverterLibary.Utilities.DocumentationParser
 {
     /// <summary>
     /// Class for parsing the XML Documentation to C# instance of classes

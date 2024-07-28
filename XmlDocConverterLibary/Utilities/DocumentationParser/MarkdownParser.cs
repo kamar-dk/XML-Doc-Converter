@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using XmlDocConverter.Models;
+using XmlDocConverterLibary.Models;
 
-namespace XmlDocConverter.Utilities.DocumentationParser
+namespace XmlDocConverterLibary.Utilities.DocumentationParser
 {
     /// <summary>
     /// Parser class for passing XML Documentation to Markdown
