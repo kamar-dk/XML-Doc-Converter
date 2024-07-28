@@ -58,8 +58,8 @@ jobs:
 
         # Windows (WPF and Console)
         mkdir -p release/windows
-        cp -r XmlDocConverter/bin/Release/net8.0/win-x64/* release/windows/
-        cp -r XmlDocConverterConsole/bin/Release/net8.0/win-x64/* release/windows/
+        cp -r XmlDocConverter/bin/Release/net7.0/win-x64/* release/windows/
+        cp -r XmlDocConverterConsole/bin/Release/net7.0/win-x64/* release/windows/
         mv release/windows release/XML_Documentation_Converter-${VERSION}-win
         cd release
         zip -r XML_Documentation_Converter-${VERSION}-win.zip XML_Documentation_Converter-${VERSION}-win
@@ -67,7 +67,7 @@ jobs:
 
         # Linux
         mkdir -p release/linux
-        cp -r XmlDocConverterConsole/bin/Release/net8.0/linux-x64/* release/linux/
+        cp -r XmlDocConverterConsole/bin/Release/net7.0/linux-x64/* release/linux/
         mv release/linux release/XML_Documentation_Converter-${VERSION}-linux
         cd release
         zip -r XML_Documentation_Converter-${VERSION}-linux.zip XML_Documentation_Converter-${VERSION}-linux
@@ -75,7 +75,7 @@ jobs:
 
         # macOS
         mkdir -p release/macos
-        cp -r XmlDocConverterConsole/bin/Release/net8.0/osx-x64/* release/macos/
+        cp -r XmlDocConverterConsole/bin/Release/net7.0/osx-x64/* release/macos/
         mv release/macos release/XML_Documentation_Converter-${VERSION}-macos
         cd release
         zip -r XML_Documentation_Converter-${VERSION}-macos.zip XML_Documentation_Converter-${VERSION}-macos
