@@ -37,19 +37,6 @@ jobs:
     - name: Build for macOS
       run: dotnet publish XmlDocConverterConsole/XmlDocConverterConsole.csproj -c Release -r osx-x64 --self-contained
 
-    # Verify the output directories
-    - name: Verify Windows WPF Build Output
-      run: ls -R XmlDocConverter/bin/Release
-
-    - name: Verify Windows Console Build Output
-      run: ls -R XmlDocConverterConsole/bin/Release
-
-    - name: Verify Linux Build Output
-      run: ls -R XmlDocConverterConsole/bin/Release
-
-    - name: Verify macOS Build Output
-      run: ls -R XmlDocConverterConsole/bin/Release
-
     # Package all builds
     - name: Package
       run: |
@@ -124,6 +111,9 @@ jobs:
       with:
         name: macos-release
 
+    - name: Debug - List Release Directory
+      run: ls -l release
+
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v1
       with:
@@ -136,4 +126,3 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-        
