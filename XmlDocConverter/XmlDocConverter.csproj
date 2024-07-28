@@ -19,14 +19,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\styles.css" />
     <None Remove="Resources\XmlDocConverter.ico" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Resources\styles.css">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Resources\XmlDocConverter.ico" />
   </ItemGroup>
 
