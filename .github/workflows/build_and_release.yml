@@ -91,19 +91,19 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: windows-release
-        path: release/XML_Documentation_Converter-${{ github.ref_name }}-win.zip
+        path: release/XML_Documentation_Converter-${VERSION}-win.zip
 
     - name: Upload Release Assets (Linux)
       uses: actions/upload-artifact@v2
       with:
         name: linux-release
-        path: release/XML_Documentation_Converter-${{ github.ref_name }}-linux.zip
+        path: release/XML_Documentation_Converter-${VERSION}-linux.zip
 
     - name: Upload Release Assets (macOS)
       uses: actions/upload-artifact@v2
       with:
         name: macos-release
-        path: release/XML_Documentation_Converter-${{ github.ref_name }}-macos.zip
+        path: release/XML_Documentation_Converter-${VERSION}-macos.zip
 
   release:
     needs: build
@@ -116,27 +116,30 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: windows-release
+        path: ./
 
     - name: Download Release Assets (Linux)
       uses: actions/download-artifact@v2
       with:
         name: linux-release
+        path: ./
 
     - name: Download Release Assets (macOS)
       uses: actions/download-artifact@v2
       with:
         name: macos-release
+        path: ./
 
-    - name: Debug - List Release Directory
-      run: ls -l release
+    - name: Debug - List Downloaded Artifacts
+      run: ls -l
 
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          release/XML_Documentation_Converter-${{ github.ref_name }}-win.zip
-          release/XML_Documentation_Converter-${{ github.ref_name }}-linux.zip
-          release/XML_Documentation_Converter-${{ github.ref_name }}-macos.zip
+          XML_Documentation_Converter-${{ github.ref_name }}-win.zip
+          XML_Documentation_Converter-${{ github.ref_name }}-linux.zip
+          XML_Documentation_Converter-${{ github.ref_name }}-macos.zip
         name: ${{ github.ref_name }} XML Documentation Converter 
         body_path: ChangeLogs/${{ github.ref_name }}.md
       env:
