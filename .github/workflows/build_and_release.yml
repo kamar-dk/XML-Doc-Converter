@@ -31,11 +31,11 @@ jobs:
 
     # Build Console for Linux
     - name: Build for Linux
-      run: dotnet publish XmlDocConverterConsole/XmlDocConverterConsole.csproj -c Release -r linux-x64 --self-contained
+      run: dotnet publish XmlDocConverterConsole/XmlDocConverterConsole.csproj -c Release -r linux-x64 --self-contained -o ../output/linux
 
     # Build Console for macOS
     - name: Build for macOS
-      run: dotnet publish XmlDocConverterConsole/XmlDocConverterConsole.csproj -c Release -r osx-x64 --self-contained
+      run: dotnet publish XmlDocConverterConsole/XmlDocConverterConsole.csproj -c Release -r osx-x64 --self-contained -o ../output/macos
 
     # Verify the output directories
     - name: Verify Windows WPF Build Output
@@ -45,10 +45,10 @@ jobs:
       run: ls -R XmlDocConverterConsole/bin/Release
 
     - name: Verify Linux Build Output
-      run: ls -R XmlDocConverterConsole/bin/Release
+      run: ls -R output/linux
 
     - name: Verify macOS Build Output
-      run: ls -R XmlDocConverterConsole/bin/Release
+      run: ls -R output/macos
 
     # Package all builds
     - name: Package
@@ -56,18 +56,25 @@ jobs:
         TAG_NAME=${GITHUB_REF#refs/tags/}
         mkdir -p release
 
-        # Windows (WPF and Console)
-        mkdir -p release/windows
-        cp -r XmlDocConverter/bin/Release/net7.0-windows/* release/windows/
-        cp -r XmlDocConverterConsole/bin/Release/net7.0/win-x64/* release/windows/
-        mv release/windows release/XML_Documentation_Converter-${TAG_NAME}-win
+        # Windows WPF
+        mkdir -p release/windows-wpf
+        cp -r XmlDocConverter/bin/Release/net7.0-windows/* release/windows-wpf/
+        mv release/windows-wpf release/XML_Documentation_Converter-${TAG_NAME}-win-wpf
         cd release
-        zip -r XML_Documentation_Converter-${TAG_NAME}-win.zip XML_Documentation_Converter-${TAG_NAME}-win
+        zip -r XML_Documentation_Converter-${TAG_NAME}-win-wpf.zip XML_Documentation_Converter-${TAG_NAME}-win-wpf
+        cd ..
+
+        # Windows Console
+        mkdir -p release/windows-console
+        cp -r XmlDocConverterConsole/bin/Release/net7.0/win-x64/* release/windows-console/
+        mv release/windows-console release/XML_Documentation_Converter-${TAG_NAME}-win-console
+        cd release
+        zip -r XML_Documentation_Converter-${TAG_NAME}-win-console.zip XML_Documentation_Converter-${TAG_NAME}-win-console
         cd ..
 
         # Linux
         mkdir -p release/linux
-        cp -r XmlDocConverterConsole/bin/Release/net7.0/linux-x64/* release/linux/
+        cp -r output/linux/* release/linux/
         mv release/linux release/XML_Documentation_Converter-${TAG_NAME}-linux
         cd release
         zip -r XML_Documentation_Converter-${TAG_NAME}-linux.zip XML_Documentation_Converter-${TAG_NAME}-linux
@@ -75,7 +82,7 @@ jobs:
 
         # macOS
         mkdir -p release/macos
-        cp -r XmlDocConverterConsole/bin/Release/net7.0/osx-x64/* release/macos/
+        cp -r output/macos/* release/macos/
         mv release/macos release/XML_Documentation_Converter-${TAG_NAME}-macos
         cd release
         zip -r XML_Documentation_Converter-${TAG_NAME}-macos.zip XML_Documentation_Converter-${TAG_NAME}-macos
@@ -87,11 +94,17 @@ jobs:
     - name: Debug - List Release Directory
       run: ls -l release
 
-    - name: Upload Release Assets (Windows)
+    - name: Upload Release Assets (Windows WPF)
       uses: actions/upload-artifact@v2
       with:
-        name: windows-release
-        path: release/XML_Documentation_Converter-${{ github.ref_name }}-win.zip
+        name: windows-wpf-release
+        path: release/XML_Documentation_Converter-${{ github.ref_name }}-win-wpf.zip
+
+    - name: Upload Release Assets (Windows Console)
+      uses: actions/upload-artifact@v2
+      with:
+        name: windows-console-release
+        path: release/XML_Documentation_Converter-${{ github.ref_name }}-win-console.zip
 
     - name: Upload Release Assets (Linux)
       uses: actions/upload-artifact@v2
@@ -113,10 +126,16 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Download Release Assets (Windows)
+    - name: Download Release Assets (Windows WPF)
       uses: actions/download-artifact@v2
       with:
-        name: windows-release
+        name: windows-wpf-release
+        path: ./release
+
+    - name: Download Release Assets (Windows Console)
+      uses: actions/download-artifact@v2
+      with:
+        name: windows-console-release
         path: ./release
 
     - name: Download Release Assets (Linux)
@@ -138,7 +157,8 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          release/XML_Documentation_Converter-${{ github.ref_name }}-win.zip
+          release/XML_Documentation_Converter-${{ github.ref_name }}-win-wpf.zip
+          release/XML_Documentation_Converter-${{ github.ref_name }}-win-console.zip
           release/XML_Documentation_Converter-${{ github.ref_name }}-linux.zip
           release/XML_Documentation_Converter-${{ github.ref_name }}-macos.zip
         name: ${{ github.ref_name }} XML Documentation Converter 
