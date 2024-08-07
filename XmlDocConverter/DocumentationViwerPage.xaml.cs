@@ -1,33 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Xml.Linq;
 using XmlDocConverterLibary.Models;
 using XmlDocConverterLibary.Utilities.DocumentationParser;
 
 namespace XmlDocConverter
 {
-    /// <summary>
-    /// Interaction logic for DocumentationViwerPage.xaml
-    /// </summary>
     public partial class DocumentationViwerPage : Page
     {
-        public DocumentationViwerPage()
-        {
-            InitializeComponent();
-        }
-
         public DocumentationViwerPage(string filePath)
         {
             InitializeComponent();
@@ -40,11 +24,44 @@ namespace XmlDocConverter
             {
                 XDocument xmlDoc = XDocument.Load(selectedFilePath);
                 var classDocs = XmlParser.ParseDocumentation(xmlDoc);
+                PopulateTableOfContents(classDocs);
                 DisplayDocumentation(classDocs);
             }
             else
             {
                 MessageBox.Show("Please select an XML file first.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void PopulateTableOfContents(List<ClassDocumentation> classDocs)
+        {
+            var namespaces = new Dictionary<string, List<ClassDocumentation>>();
+            foreach (var classDoc in classDocs)
+            {
+                if (!namespaces.ContainsKey(classDoc.Namespace))
+                {
+                    namespaces[classDoc.Namespace] = new List<ClassDocumentation>();
+                }
+                namespaces[classDoc.Namespace].Add(classDoc);
+            }
+
+            foreach (var ns in namespaces.Keys)
+            {
+                var nsNode = new TreeViewItem { Header = ns };
+                foreach (var classDoc in namespaces[ns])
+                {
+                    var classLink = new TextBlock();
+                    var hyperlink = new Hyperlink(new Run(classDoc.ClassName))
+                    {
+                        NavigateUri = new Uri(classDoc.ClassName, UriKind.Relative)
+                    };
+                    hyperlink.RequestNavigate += Hyperlink_RequestNavigate;
+                    classLink.Inlines.Add(hyperlink);
+
+                    var classNode = new TreeViewItem { Header = classLink };
+                    nsNode.Items.Add(classNode);
+                }
+                tocTreeView.Items.Add(nsNode);
             }
         }
 
@@ -58,10 +75,10 @@ namespace XmlDocConverter
                     Text = classDoc.ClassName,
                     FontSize = 20,
                     FontWeight = FontWeights.Bold,
-                    Margin = new Thickness(0, 10, 0, 5),
-                    IsHitTestVisible = false
+                    Margin = new Thickness(0, 10, 0, 5)
                 };
-                ContentPanel.Children.Add(classTitle);
+                contentPanel.Children.Add(classTitle);
+                RegisterName(GenerateValidName(classDoc.ClassName), classTitle);
 
                 // Namespace
                 if (!string.IsNullOrEmpty(classDoc.Namespace))
@@ -70,10 +87,9 @@ namespace XmlDocConverter
                     {
                         Text = $"Namespace: {classDoc.Namespace}",
                         FontStyle = FontStyles.Italic,
-                        Margin = new Thickness(0, 0, 0, 5),
-                        IsHitTestVisible = false
+                        Margin = new Thickness(0, 0, 0, 5)
                     };
-                    ContentPanel.Children.Add(classNamespace);
+                    contentPanel.Children.Add(classNamespace);
                 }
 
                 // Summary
@@ -82,10 +98,9 @@ namespace XmlDocConverter
                     var classSummary = new TextBlock
                     {
                         Text = $"Summary: {classDoc.Summary}",
-                        Margin = new Thickness(0, 0, 0, 5),
-                        IsHitTestVisible = false
+                        Margin = new Thickness(0, 0, 0, 5)
                     };
-                    ContentPanel.Children.Add(classSummary);
+                    contentPanel.Children.Add(classSummary);
                 }
 
                 // Remarks
@@ -94,10 +109,9 @@ namespace XmlDocConverter
                     var classRemarks = new TextBlock
                     {
                         Text = $"Remarks: {classDoc.Remarks}",
-                        Margin = new Thickness(0, 0, 0, 5),
-                        IsHitTestVisible = false
+                        Margin = new Thickness(0, 0, 0, 5)
                     };
-                    ContentPanel.Children.Add(classRemarks);
+                    contentPanel.Children.Add(classRemarks);
                 }
 
                 // Members
@@ -108,10 +122,9 @@ namespace XmlDocConverter
                         Text = "Members",
                         FontSize = 16,
                         FontWeight = FontWeights.Bold,
-                        Margin = new Thickness(0, 10, 0, 5),
-                        IsHitTestVisible = false
+                        Margin = new Thickness(0, 10, 0, 5)
                     };
-                    ContentPanel.Children.Add(membersTitle);
+                    contentPanel.Children.Add(membersTitle);
 
                     foreach (var member in classDoc.Members)
                     {
@@ -120,20 +133,19 @@ namespace XmlDocConverter
                             Text = member.MemberName,
                             FontSize = 14,
                             FontWeight = FontWeights.Bold,
-                            Margin = new Thickness(0, 5, 0, 0),
-                            IsHitTestVisible = false
+                            Margin = new Thickness(0, 5, 0, 0)
                         };
-                        ContentPanel.Children.Add(memberTitle);
+                        contentPanel.Children.Add(memberTitle);
+                        RegisterName(GenerateValidName(member.MemberName), memberTitle);
 
                         if (!string.IsNullOrEmpty(member.Summary))
                         {
                             var memberSummary = new TextBlock
                             {
                                 Text = $"Summary: {member.Summary}",
-                                Margin = new Thickness(10, 0, 0, 5),
-                                IsHitTestVisible = false
+                                Margin = new Thickness(10, 0, 0, 5)
                             };
-                            ContentPanel.Children.Add(memberSummary);
+                            contentPanel.Children.Add(memberSummary);
                         }
 
                         if (!string.IsNullOrEmpty(member.Remarks))
@@ -141,10 +153,9 @@ namespace XmlDocConverter
                             var memberRemarks = new TextBlock
                             {
                                 Text = $"Remarks: {member.Remarks}",
-                                Margin = new Thickness(10, 0, 0, 5),
-                                IsHitTestVisible = false
+                                Margin = new Thickness(10, 0, 0, 5)
                             };
-                            ContentPanel.Children.Add(memberRemarks);
+                            contentPanel.Children.Add(memberRemarks);
                         }
 
                         if (member.Parameters.Count > 0)
@@ -152,21 +163,19 @@ namespace XmlDocConverter
                             var parametersTitle = new TextBlock
                             {
                                 Text = "Parameters:",
-                                Margin = new Thickness(10, 0, 0, 5),
-                                IsHitTestVisible = false
+                                Margin = new Thickness(10, 0, 0, 5)
                             };
-                            ContentPanel.Children.Add(parametersTitle);
+                            contentPanel.Children.Add(parametersTitle);
 
-                            var parametersList = new ListView
+                            var parametersList = new StackPanel
                             {
-                                Margin = new Thickness(20, 0, 0, 5),
-                                IsHitTestVisible = false
+                                Margin = new Thickness(20, 0, 0, 5)
                             };
                             foreach (var param in member.Parameters)
                             {
-                                parametersList.Items.Add($"{param.Key}: {param.Value}");
+                                parametersList.Children.Add(new TextBlock { Text = $"{param.Key}: {param.Value}" });
                             }
-                            ContentPanel.Children.Add(parametersList);
+                            contentPanel.Children.Add(parametersList);
                         }
 
                         if (member.TypeParameters.Count > 0)
@@ -174,20 +183,19 @@ namespace XmlDocConverter
                             var typeParametersTitle = new TextBlock
                             {
                                 Text = "Type Parameters:",
-                                Margin = new Thickness(10, 0, 0, 5),
-                                IsHitTestVisible = false
+                                Margin = new Thickness(10, 0, 0, 5)
                             };
-                            ContentPanel.Children.Add(typeParametersTitle);
+                            contentPanel.Children.Add(typeParametersTitle);
 
-                            var typeParametersList = new ListView
+                            var typeParametersList = new StackPanel
                             {
                                 Margin = new Thickness(20, 0, 0, 5)
                             };
                             foreach (var typeParam in member.TypeParameters)
                             {
-                                typeParametersList.Items.Add($"{typeParam.Key}: {typeParam.Value}");
+                                typeParametersList.Children.Add(new TextBlock { Text = $"{typeParam.Key}: {typeParam.Value}" });
                             }
-                            ContentPanel.Children.Add(typeParametersList);
+                            contentPanel.Children.Add(typeParametersList);
                         }
 
                         if (member.Exceptions.Count > 0)
@@ -195,20 +203,19 @@ namespace XmlDocConverter
                             var exceptionsTitle = new TextBlock
                             {
                                 Text = "Exceptions:",
-                                Margin = new Thickness(10, 0, 0, 5),
-                                IsHitTestVisible = false
+                                Margin = new Thickness(10, 0, 0, 5)
                             };
-                            ContentPanel.Children.Add(exceptionsTitle);
+                            contentPanel.Children.Add(exceptionsTitle);
 
-                            var exceptionsList = new ListView
+                            var exceptionsList = new StackPanel
                             {
                                 Margin = new Thickness(20, 0, 0, 5)
                             };
                             foreach (var exception in member.Exceptions)
                             {
-                                exceptionsList.Items.Add($"{exception.Key}: {exception.Value}");
+                                exceptionsList.Children.Add(new TextBlock { Text = $"{exception.Key}: {exception.Value}" });
                             }
-                            ContentPanel.Children.Add(exceptionsList);
+                            contentPanel.Children.Add(exceptionsList);
                         }
 
                         if (!string.IsNullOrEmpty(member.Returns))
@@ -216,10 +223,9 @@ namespace XmlDocConverter
                             var returnsText = new TextBlock
                             {
                                 Text = $"Returns: {member.Returns}",
-                                Margin = new Thickness(10, 0, 0, 5),
-                                IsHitTestVisible = false
+                                Margin = new Thickness(10, 0, 0, 5)
                             };
-                            ContentPanel.Children.Add(returnsText);
+                            contentPanel.Children.Add(returnsText);
                         }
 
                         if (member.SeeAlso.Count > 0)
@@ -227,20 +233,19 @@ namespace XmlDocConverter
                             var seeAlsoTitle = new TextBlock
                             {
                                 Text = "See Also:",
-                                Margin = new Thickness(10, 0, 0, 5),
-                                IsHitTestVisible = false
+                                Margin = new Thickness(10, 0, 0, 5)
                             };
-                            ContentPanel.Children.Add(seeAlsoTitle);
+                            contentPanel.Children.Add(seeAlsoTitle);
 
-                            var seeAlsoList = new ListView
+                            var seeAlsoList = new StackPanel
                             {
                                 Margin = new Thickness(20, 0, 0, 5)
                             };
                             foreach (var seeAlso in member.SeeAlso)
                             {
-                                seeAlsoList.Items.Add(seeAlso);
+                                seeAlsoList.Children.Add(new TextBlock { Text = seeAlso });
                             }
-                            ContentPanel.Children.Add(seeAlsoList);
+                            contentPanel.Children.Add(seeAlsoList);
                         }
 
                         if (member.Examples.Count > 0)
@@ -248,10 +253,9 @@ namespace XmlDocConverter
                             var examplesTitle = new TextBlock
                             {
                                 Text = "Examples:",
-                                Margin = new Thickness(10, 0, 0, 5),
-                                IsHitTestVisible = false
+                                Margin = new Thickness(10, 0, 0, 5)
                             };
-                            ContentPanel.Children.Add(examplesTitle);
+                            contentPanel.Children.Add(examplesTitle);
 
                             foreach (var example in member.Examples)
                             {
@@ -259,20 +263,35 @@ namespace XmlDocConverter
                                 {
                                     Text = example,
                                     TextWrapping = TextWrapping.Wrap,
-                                    Margin = new Thickness(20, 0, 0, 5),
-                                    IsHitTestVisible = false
+                                    Margin = new Thickness(20, 0, 0, 5)
                                 };
-                                ContentPanel.Children.Add(exampleText);
+                                contentPanel.Children.Add(exampleText);
                             }
                         }
 
-                        ContentPanel.Children.Add(new Separator());
+                        contentPanel.Children.Add(new Separator());
                     }
                 }
 
-                ContentPanel.Children.Add(new Separator());
+                contentPanel.Children.Add(new Separator());
             }
         }
 
+        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            ScrollToSection(e.Uri.OriginalString);
+            e.Handled = true;
+        }
+
+        private void ScrollToSection(string sectionName)
+        {
+            var target = contentPanel.FindName(GenerateValidName(sectionName)) as FrameworkElement;
+            target?.BringIntoView();
+        }
+
+        private string GenerateValidName(string name)
+        {
+            return name.Replace(".", "_").Replace(":", "_");
+        }
     }
 }

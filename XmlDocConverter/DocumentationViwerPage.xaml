@@ -8,9 +8,24 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="DocumentationViwerPage">
 
-    <ScrollViewer VerticalScrollBarVisibility="Visible">
-        <StackPanel x:Name="ContentPanel" Margin="10,0,0,5">
-            <!-- Content will be added dynamically here -->
-        </StackPanel>
-    </ScrollViewer>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Table of Contents -->
+        <TreeView Name="tocTreeView" Grid.Column="0" Margin="10">
+            <TreeView.Resources>
+                <Style TargetType="TreeViewItem">
+                    <Setter Property="IsExpanded" Value="True" />
+                </Style>
+            </TreeView.Resources>
+        </TreeView>
+
+        <!-- Content Area -->
+        <ScrollViewer Grid.Column="1" Margin="10">
+            <StackPanel Name="contentPanel" />
+        </ScrollViewer>
+    </Grid>
 </Page>
