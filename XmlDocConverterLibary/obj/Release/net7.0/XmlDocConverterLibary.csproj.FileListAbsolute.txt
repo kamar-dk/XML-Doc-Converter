@@ -1,0 +1,13 @@
+C:\Users\Kaspe\Documents\github\XML-Doc-Converter\XmlDocConverterLibary\bin\Release\net7.0\Resources\styles.css
+C:\Users\Kaspe\Documents\github\XML-Doc-Converter\XmlDocConverterLibary\bin\Release\net7.0\XmlDocConverterLibary.deps.json
+C:\Users\Kaspe\Documents\github\XML-Doc-Converter\XmlDocConverterLibary\bin\Release\net7.0\XmlDocConverterLibary.dll
+C:\Users\Kaspe\Documents\github\XML-Doc-Converter\XmlDocConverterLibary\bin\Release\net7.0\XmlDocConverterLibary.pdb
+C:\Users\Kaspe\Documents\github\XML-Doc-Converter\XmlDocConverterLibary\obj\Release\net7.0\XmlDocConverterLibary.csproj.AssemblyReference.cache
+C:\Users\Kaspe\Documents\github\XML-Doc-Converter\XmlDocConverterLibary\obj\Release\net7.0\XmlDocConverterLibary.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Kaspe\Documents\github\XML-Doc-Converter\XmlDocConverterLibary\obj\Release\net7.0\XmlDocConverterLibary.AssemblyInfoInputs.cache
+C:\Users\Kaspe\Documents\github\XML-Doc-Converter\XmlDocConverterLibary\obj\Release\net7.0\XmlDocConverterLibary.AssemblyInfo.cs
+C:\Users\Kaspe\Documents\github\XML-Doc-Converter\XmlDocConverterLibary\obj\Release\net7.0\XmlDocConverterLibary.csproj.CoreCompileInputs.cache
+C:\Users\Kaspe\Documents\github\XML-Doc-Converter\XmlDocConverterLibary\obj\Release\net7.0\XmlDocConverterLibary.dll
+C:\Users\Kaspe\Documents\github\XML-Doc-Converter\XmlDocConverterLibary\obj\Release\net7.0\refint\XmlDocConverterLibary.dll
+C:\Users\Kaspe\Documents\github\XML-Doc-Converter\XmlDocConverterLibary\obj\Release\net7.0\XmlDocConverterLibary.pdb
+C:\Users\Kaspe\Documents\github\XML-Doc-Converter\XmlDocConverterLibary\obj\Release\net7.0\ref\XmlDocConverterLibary.dll

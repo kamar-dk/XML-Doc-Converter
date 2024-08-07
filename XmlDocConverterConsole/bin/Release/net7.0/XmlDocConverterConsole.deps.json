@@ -1,0 +1,36 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v7.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v7.0": {
+      "XmlDocConverterConsole/1.0.0": {
+        "dependencies": {
+          "XmlDocConverterLibary": "1.0.0"
+        },
+        "runtime": {
+          "XmlDocConverterConsole.dll": {}
+        }
+      },
+      "XmlDocConverterLibary/1.0.0": {
+        "runtime": {
+          "XmlDocConverterLibary.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "XmlDocConverterConsole/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "XmlDocConverterLibary/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

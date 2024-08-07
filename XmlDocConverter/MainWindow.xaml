@@ -6,23 +6,10 @@
         xmlns:local="clr-namespace:XmlDocConverter"
         mc:Ignorable="d"
         Title="XML Documentation Converter" Height="450" Width="800">
-    <DockPanel Margin="10">
-        <WrapPanel HorizontalAlignment="Center" DockPanel.Dock="Top" Margin="0,0,0,10">
-            <Button Name="btnOpenFile" Click="btnOpenFile_Click">Open file</Button>
-            <Button Name="btnConvertFileToMarkdown" Click="btnConvertFileToMarkdown_Click" Margin="10,0,0,0">Convert to Markdown</Button>
-            <Button Name="btnConvertFileToBitbucketMarkdown" Click="btnConvertFileToBitbucketMarkdown_Click" Margin="10,0,0,0">Convert to Bitbucket Markdown</Button>
-            <Button Name="btnConvertFileToHtml" Click="btnConvertFileToHtml_Click" Margin="10,0,0,0">Convert to HTML</Button>
-            <Button Name="btnSetOutputDirectory"  Click="btnSetOutputDirectory_Click" Margin="10,0,0,0" Content="Set Output Directory"/>
-            <Button Name="btnOpenOutputFolder" Click="btnOpenOutputFolder_Click" Margin="10,0,0,0" Content="Open Output Folder"/>
-        </WrapPanel>
-        <WrapPanel HorizontalAlignment="Left" DockPanel.Dock="Top" Margin="0,0,0,10">
-            <TextBlock Text="Selected File:" Margin="0,0,0,5"/>
-            <TextBox Name="txtSelectedFilePath" IsReadOnly="True" Margin="0,0,0,10"/>
-        </WrapPanel>
-        <WrapPanel HorizontalAlignment="Left" DockPanel.Dock="Top" Margin="0,0,0,10">
-            <TextBlock Text="Output Directory:" Margin="0,0,0,5"/>
-            <TextBox Name="txtOutputDirectory" IsReadOnly="True"/>
-        </WrapPanel>
-        <TextBox Name="txtEditor" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Margin="0,10,0,10"/>
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top">
+            <Frame x:Name="FileSelectionFrame" NavigationUIVisibility="Hidden"/>
+        </StackPanel>
+        <Frame x:Name="DocumentationViewerFrame" NavigationUIVisibility="Hidden"/>
     </DockPanel>
 </Window>
