@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -291,7 +292,8 @@ namespace XmlDocConverter
 
         private string GenerateValidName(string name)
         {
-            return name.Replace(".", "_").Replace(":", "_");
+            // Replace invalid characters with underscores
+            return new string(name.Select(c => char.IsLetterOrDigit(c) ? c : '_').ToArray());
         }
     }
 }
