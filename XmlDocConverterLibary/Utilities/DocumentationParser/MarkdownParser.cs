@@ -3,22 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using XmlDocConverterLibary.Models;
 
 namespace XmlDocConverterLibary.Utilities.DocumentationParser
 {
     /// <summary>
-    /// Parser class for passing XML Documentation to Markdown
-    /// Inherits from <seealso cref="Parser"/>
+    /// Parser class for converting XML Documentation to Markdown
     /// </summary>
     public class MarkdownParser
     {
         /// <summary>
-        /// Method for generation a Markdown document
+        /// Method for generating a Markdown document
         /// </summary>
-        /// <param name="classDocs">List of <seealso cref="ClassDocumentation"/> with the documentation</param>
-        /// <returns>Returns a string with the Markdown</returns>
+        /// <param name="classDocs">List of <seealso cref="ClassDocumentation"/> containing the documentation</param>
+        /// <returns>Returns a string with the Markdown content</returns>
         public static string GenerateMarkdown(List<ClassDocumentation> classDocs)
         {
             var markdown = new StringBuilder();
@@ -39,14 +37,12 @@ namespace XmlDocConverterLibary.Utilities.DocumentationParser
             markdown.AppendLine();
 
             var sortedNamespaces = namespaces.Keys.OrderBy(ns => ns).ToList();
-
-            // Track already added namespaces to avoid duplicates
             var addedNamespaces = new HashSet<string>();
 
+            // Generate namespace and class list for the table of contents
             foreach (var ns in sortedNamespaces)
             {
                 var levels = ns.Split('.');
-
                 for (int i = 0; i < levels.Length; i++)
                 {
                     var subNamespace = string.Join(".", levels.Take(i + 1));
@@ -76,12 +72,14 @@ namespace XmlDocConverterLibary.Utilities.DocumentationParser
                 }
                 markdown.AppendLine();
 
+                // Generate the documentation for each class in the namespace
                 foreach (var classDoc in namespaces[ns])
                 {
                     markdown.AppendLine($"## {classDoc.ClassName}");
                     markdown.AppendLine();
                     markdown.AppendLine($"**Namespace:** {classDoc.Namespace}");
                     markdown.AppendLine();
+
                     if (!string.IsNullOrEmpty(classDoc.Summary))
                     {
                         markdown.AppendLine($"**Summary:**");
@@ -118,6 +116,7 @@ namespace XmlDocConverterLibary.Utilities.DocumentationParser
                         var memberAnchor = GenerateAnchor(memberNameWithoutPrefix);
                         markdown.AppendLine(GenerateHeader(memberNameWithoutPrefix, 3));
                         markdown.AppendLine();
+
                         if (!string.IsNullOrEmpty(member.Summary))
                         {
                             markdown.AppendLine($"**Summary:**");
@@ -191,6 +190,7 @@ namespace XmlDocConverterLibary.Utilities.DocumentationParser
                             markdown.AppendLine();
                         }
                     }
+
                     markdown.AppendLine("---");
                     markdown.AppendLine();
                 }
@@ -203,7 +203,7 @@ namespace XmlDocConverterLibary.Utilities.DocumentationParser
         /// Method for generating an anchor for a Markdown header
         /// </summary>
         /// <param name="memberName">String with the member name</param>
-        /// <returns>Returns a string with the Ancor for Markdown formatted correctly</returns>
+        /// <returns>Returns a string with the anchor for Markdown formatted correctly</returns>
         public static string GenerateAnchor(string memberName)
         {
             // Convert to lowercase, remove invalid characters, and remove spaces
@@ -223,6 +223,12 @@ namespace XmlDocConverterLibary.Utilities.DocumentationParser
             return Regex.Replace(input, @"\s+", " ").Trim();
         }
 
+        /// <summary>
+        /// Method for generating a Markdown header
+        /// </summary>
+        /// <param name="header">The header text</param>
+        /// <param name="level">The level of the header</param>
+        /// <returns>Returns a formatted header string for Markdown</returns>
         public static string GenerateHeader(string header, int level)
         {
             return $"{new string('#', level)} {header}";

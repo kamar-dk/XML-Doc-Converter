@@ -28,6 +28,22 @@ namespace XmlDocConverterLibary.Models
         /// </summary>
         public string Returns { get; set; }
         /// <summary>
+        /// Value of the Member
+        /// </summary>
+        public string Value { get; set; }
+        /// <summary>
+        /// Permission of the Member
+        /// </summary>
+        public string Permission { get; set; }
+        /// <summary>
+        /// Indicates if the documentation is inherited
+        /// </summary>
+        public bool InheritDoc { get; set; }
+        /// <summary>
+        /// Completion list for the Member
+        /// </summary>
+        public string CompletionList { get; set; }
+        /// <summary>
         /// List of SeeAlso references
         /// </summary>
         public List<string> SeeAlso { get; set; } = new List<string>();
@@ -36,7 +52,15 @@ namespace XmlDocConverterLibary.Models
         /// </summary>
         public List<string> Examples { get; set; } = new List<string>();
         /// <summary>
-        /// List of Exceptions
+        /// List of Overloads
+        /// </summary>
+        public string Overloads { get; set; }
+        /// <summary>
+        /// Lists associated with the member
+        /// </summary>
+        public List<string> Lists { get; set; } = new List<string>();
+        /// <summary>
+        /// List of Parameters
         /// </summary>
         public Dictionary<string, string> Parameters { get; set; } = new Dictionary<string, string>();
         /// <summary>
@@ -44,7 +68,7 @@ namespace XmlDocConverterLibary.Models
         /// </summary>
         public Dictionary<string, string> TypeParameters { get; set; } = new Dictionary<string, string>();
         /// <summary>
-        /// Dictorynary of Exceptions
+        /// Dictionary of Exceptions
         /// </summary>
         public Dictionary<string, string> Exceptions { get; set; } = new Dictionary<string, string>();
     }
@@ -61,4 +85,3 @@ namespace XmlDocConverterLibary.Models
         public List<MemberDocumentation> Members { get; set; } = new List<MemberDocumentation>();
     }
 }
-

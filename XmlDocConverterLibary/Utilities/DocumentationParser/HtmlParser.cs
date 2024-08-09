@@ -7,7 +7,7 @@ using XmlDocConverterLibary.Models;
 namespace XmlDocConverterLibary.Utilities.DocumentationParser
 {
     /// <summary>
-    /// Parser class for passing XML Documentation to HTML
+    /// Parser class for converting XML Documentation to HTML
     /// Inherits from <seealso cref="Parser"/>
     /// </summary>
     public class HtmlParser : Parser
@@ -21,6 +21,7 @@ namespace XmlDocConverterLibary.Utilities.DocumentationParser
         {
             var html = new StringBuilder();
 
+            // Begin HTML structure
             html.AppendLine("<!DOCTYPE html>");
             html.AppendLine("<html lang=\"en\">");
             html.AppendLine("<head>");
@@ -177,7 +178,7 @@ namespace XmlDocConverterLibary.Utilities.DocumentationParser
         /// Generates a list of namespaces
         /// </summary>
         /// <param name="html">The StringBuilder containing the HTML</param>
-        /// <param name="namespaces">List of ClassDocumentation containing the namespaces</param>
+        /// <param name="namespaces">Dictionary of ClassDocumentation grouped by namespaces</param>
         private static void GenerateNamespaceList(StringBuilder html, Dictionary<string, List<ClassDocumentation>> namespaces)
         {
             var nsHierarchy = BuildNamespaceHierarchy(namespaces.Keys);
@@ -211,8 +212,8 @@ namespace XmlDocConverterLibary.Utilities.DocumentationParser
         /// <summary>
         /// Builds a hierarchy of namespace nodes
         /// </summary>
-        /// <param name="namespaces">Ienumerrable of string with the namespaces</param>
-        /// <returns>Returns a list of NamespaceNode's</returns>
+        /// <param name="namespaces">IEnumerable of string with the namespaces</param>
+        /// <returns>Returns a list of NamespaceNode objects</returns>
         private static List<NamespaceNode> BuildNamespaceHierarchy(IEnumerable<string> namespaces)
         {
             var rootNodes = new List<NamespaceNode>();
@@ -265,7 +266,7 @@ namespace XmlDocConverterLibary.Utilities.DocumentationParser
         /// Method for generating an anchor tag
         /// </summary>
         /// <param name="name">Name of the Anchor</param>
-        /// <returns>a string that is formatted so it can be used in at HTML Anchor</returns>
+        /// <returns>A string that is formatted to be used in an HTML Anchor</returns>
         private static string GenerateAnchor(string name)
         {
             return name.Replace('.', '-');

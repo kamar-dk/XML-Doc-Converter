@@ -39,7 +39,7 @@ namespace XmlDocConverterLibary.Utilities.DocumentationParser
                     Remarks = CleanWhitespace(ParseXmlDocumentation(classElement.Element("remarks")))
                 };
 
-                // Include properties, fields, and methods
+                // Include properties, fields, methods, and more
                 var memberElements = members.Where(m =>
                     m.Attribute("name")?.Value.StartsWith($"M:{fullClassName}.") == true ||
                     m.Attribute("name")?.Value.StartsWith($"P:{fullClassName}.") == true ||
@@ -61,7 +61,11 @@ namespace XmlDocConverterLibary.Utilities.DocumentationParser
                         MemberName = memberElement.Attribute("name")?.Value,
                         Summary = CleanWhitespace(ParseXmlDocumentation(memberElement.Element("summary"))),
                         Remarks = CleanWhitespace(ParseXmlDocumentation(memberElement.Element("remarks"))),
-                        Returns = CleanWhitespace(ParseXmlDocumentation(memberElement.Element("returns")))
+                        Returns = CleanWhitespace(ParseXmlDocumentation(memberElement.Element("returns"))),
+                        Value = CleanWhitespace(ParseXmlDocumentation(memberElement.Element("value"))),
+                        Permission = CleanWhitespace(ParseXmlDocumentation(memberElement.Element("permission"))),
+                        CompletionList = CleanWhitespace(ParseXmlDocumentation(memberElement.Element("completionlist"))),
+                        InheritDoc = memberElement.Element("inheritdoc") != null
                     };
 
                     foreach (var paramElement in memberElement.Elements("param"))
@@ -89,6 +93,16 @@ namespace XmlDocConverterLibary.Utilities.DocumentationParser
                         memberDoc.Examples.Add(CleanWhitespace(exampleElement.Value.Trim()));
                     }
 
+                    foreach (var overloadElement in memberElement.Elements("overloads"))
+                    {
+                        memberDoc.Overloads = CleanWhitespace(overloadElement.Value.Trim());
+                    }
+
+                    foreach (var listElement in memberElement.Elements("list"))
+                    {
+                        memberDoc.Lists.Add(CleanWhitespace(listElement.Value.Trim()));
+                    }
+
                     classDoc.Members.Add(memberDoc);
                 }
 
@@ -99,7 +113,7 @@ namespace XmlDocConverterLibary.Utilities.DocumentationParser
         }
 
         /// <summary>
-        ///  Method for parsing the XML documentation to a string
+        /// Method for parsing the XML documentation to a string
         /// </summary>
         /// <param name="element">Element from the XML documentation</param>
         /// <returns>Returns the text of the XML Documentation</returns>
@@ -114,14 +128,38 @@ namespace XmlDocConverterLibary.Utilities.DocumentationParser
                 {
                     return textNode.Value;
                 }
-                else if (node is XElement el && el.Name == "paramref")
+                else if (node is XElement el)
                 {
-                    return $"`{el.Attribute("name")?.Value}`";
+                    if (el.Name == "paramref")
+                    {
+                        return $"`{el.Attribute("name")?.Value}`";
+                    }
+                    else if (el.Name == "see")
+                    {
+                        return $"See {el.Attribute("cref")?.Value}";
+                    }
+                    else if (el.Name == "c")
+                    {
+                        return $"`{el.Value}`";
+                    }
                 }
                 return "";
             }));
 
             return text;
+        }
+
+        /// <summary>
+        /// Method for cleaning white space in the XML documentation
+        /// </summary>
+        /// <param name="input">Input string from the XML documentation</param>
+        /// <returns>Cleaned string</returns>
+        private static string CleanWhitespace(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return string.Empty;
+
+            return Regex.Replace(input, @"\s+", " ").Trim();
         }
     }
 }
