@@ -89,7 +89,8 @@ namespace XmlDocConverterConsole
 
                 XDocument xmlDoc = XDocument.Load(selectedFilePath);
                 var classDocs = XmlParser.ParseDocumentation(xmlDoc);
-                string markdownContent = MarkdownParser.GenerateMarkdown(classDocs);
+                var markdownParser = new MarkdownParser();
+                string markdownContent = markdownParser.GenerateMarkdown(classDocs);
                 Directory.CreateDirectory(outputDirectory);
                 string markdownPath = Path.Combine(outputDirectory, "documentation.md");
                 File.WriteAllText(markdownPath, markdownContent);
@@ -118,7 +119,8 @@ namespace XmlDocConverterConsole
 
                 XDocument xmlDoc = XDocument.Load(selectedFilePath);
                 var classDocs = XmlParser.ParseDocumentation(xmlDoc);
-                string markdownContent = BitBucketMarkdownParser.GenerateMarkdown(classDocs);
+                var bitBucketMarkdownParser = new BitBucketMarkdownParser();
+                string markdownContent = bitBucketMarkdownParser.GenerateMarkdown(classDocs);
 
                 string markdownPath = Path.Combine(outputDirectory, "BitbucketDocumentation.md");
                 File.WriteAllText(markdownPath, markdownContent);
