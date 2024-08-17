@@ -17,7 +17,7 @@ namespace XmlDocConverterLibary.Utilities.DocumentationParser
         /// </summary>
         /// <param name="classDocs">List of <seealso cref="ClassDocumentation"/> containing the documentation</param>
         /// <returns>Returns a string with the Markdown content</returns>
-        public static string GenerateMarkdown(List<ClassDocumentation> classDocs)
+        public string GenerateMarkdown(List<ClassDocumentation> classDocs)
         {
             var markdown = new StringBuilder();
 
@@ -60,7 +60,7 @@ namespace XmlDocConverterLibary.Utilities.DocumentationParser
             // Generate the documentation for each namespace and its classes
             foreach (var ns in sortedNamespaces)
             {
-                markdown.AppendLine($"# {ns}");
+                markdown.AppendLine(GenerateHeader(ns, 1));
                 markdown.AppendLine();
 
                 // Generate the table of contents for the classes in this namespace
@@ -75,7 +75,7 @@ namespace XmlDocConverterLibary.Utilities.DocumentationParser
                 // Generate the documentation for each class in the namespace
                 foreach (var classDoc in namespaces[ns])
                 {
-                    markdown.AppendLine($"## {classDoc.ClassName}");
+                    markdown.AppendLine(GenerateHeader(classDoc.ClassName, 2));
                     markdown.AppendLine();
                     markdown.AppendLine($"**Namespace:** {classDoc.Namespace}");
                     markdown.AppendLine();
@@ -229,7 +229,7 @@ namespace XmlDocConverterLibary.Utilities.DocumentationParser
         /// <param name="header">The header text</param>
         /// <param name="level">The level of the header</param>
         /// <returns>Returns a formatted header string for Markdown</returns>
-        public static string GenerateHeader(string header, int level)
+        public virtual string GenerateHeader(string header, int level)
         {
             return $"{new string('#', level)} {header}";
         }

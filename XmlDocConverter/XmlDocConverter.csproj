@@ -20,13 +20,18 @@
 
   <ItemGroup>
     <None Remove="Resources\XmlDocConverter.ico" />
+    <None Remove="App.config" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Resources\XmlDocConverter.ico" />
+    <Content Include="App.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="log4net" Version="2.0.17" />
     <PackageReference Include="WindowsAPICodePack-Core" Version="1.1.2" />
     <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
   </ItemGroup>

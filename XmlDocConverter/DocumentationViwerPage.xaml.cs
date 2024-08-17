@@ -1,4 +1,5 @@
-﻿using System;
+﻿using log4net;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -13,6 +14,9 @@ namespace XmlDocConverter
 {
     public partial class DocumentationViwerPage : Page
     {
+
+        private static readonly ILog log = LogManager.GetLogger(typeof(DocumentationViwerPage));
+
         public DocumentationViwerPage(string filePath)
         {
             InitializeComponent();
@@ -25,8 +29,15 @@ namespace XmlDocConverter
             {
                 XDocument xmlDoc = XDocument.Load(selectedFilePath);
                 var classDocs = XmlParser.ParseDocumentation(xmlDoc);
-                PopulateTableOfContents(classDocs);
-                DisplayDocumentation(classDocs);
+                try
+                {
+                    PopulateTableOfContents(classDocs);
+                    DisplayDocumentation(classDocs);
+                } catch (Exception ex)
+                {
+                    log.Error($"An error occurred while loading the documentation: {ex.Message}");
+                    MessageBox.Show($"An error occurred while loading the documentation: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
             else
             {
@@ -36,33 +47,67 @@ namespace XmlDocConverter
 
         private void PopulateTableOfContents(List<ClassDocumentation> classDocs)
         {
-            var namespaces = new Dictionary<string, List<ClassDocumentation>>();
+            var namespaceTree = new Dictionary<string, TreeViewItem>();
+
+            // Sort the classDocs to ensure that sub-namespaces are handled before classes
+            classDocs.Sort((x, y) => string.Compare(x.Namespace, y.Namespace));
+
             foreach (var classDoc in classDocs)
             {
-                if (!namespaces.ContainsKey(classDoc.Namespace))
-                {
-                    namespaces[classDoc.Namespace] = new List<ClassDocumentation>();
-                }
-                namespaces[classDoc.Namespace].Add(classDoc);
-            }
+                // Split the namespace into two parts: main namespace and remainder
+                var lastDotIndex = classDoc.Namespace.LastIndexOf('.');
+                string mainNamespace;
+                string subNamespace;
 
-            foreach (var ns in namespaces.Keys)
-            {
-                var nsNode = new TreeViewItem { Header = ns };
-                foreach (var classDoc in namespaces[ns])
+                if (lastDotIndex != -1)
                 {
-                    var classLink = new TextBlock();
-                    var hyperlink = new Hyperlink(new Run(classDoc.ClassName))
+                    mainNamespace = classDoc.Namespace.Substring(0, lastDotIndex); // e.g., "program.utilities"
+                    subNamespace = classDoc.Namespace.Substring(lastDotIndex + 1); // e.g., "models"
+                }
+                else
+                {
+                    mainNamespace = classDoc.Namespace; // If no dot found, use the entire namespace
+                    subNamespace = string.Empty;
+                }
+
+                // Handle the main namespace
+                if (!namespaceTree.ContainsKey(mainNamespace))
+                {
+                    var nsNode = new TreeViewItem { Header = mainNamespace };
+                    namespaceTree[mainNamespace] = nsNode;
+                    tocTreeView.Items.Add(nsNode);
+                }
+
+                var parentNode = namespaceTree[mainNamespace];
+
+                // If there's a subnamespace, handle it
+                if (!string.IsNullOrEmpty(subNamespace))
+                {
+                    if (!namespaceTree.ContainsKey(classDoc.Namespace))
                     {
-                        NavigateUri = new Uri(classDoc.ClassName, UriKind.Relative)
-                    };
-                    hyperlink.RequestNavigate += Hyperlink_RequestNavigate;
-                    classLink.Inlines.Add(hyperlink);
+                        var subNode = new TreeViewItem { Header = subNamespace };
+                        namespaceTree[classDoc.Namespace] = subNode;
 
-                    var classNode = new TreeViewItem { Header = classLink };
-                    nsNode.Items.Add(classNode);
+                        // Insert the subnamespace node at the top of the parent node's items
+                        parentNode.Items.Insert(0, subNode);
+                    }
+
+                    parentNode = namespaceTree[classDoc.Namespace];
                 }
-                tocTreeView.Items.Add(nsNode);
+
+                // Now add the class under the correct node
+                var classLink = new TextBlock();
+                var hyperlink = new Hyperlink(new Run(classDoc.ClassName))
+                {
+                    NavigateUri = new Uri(classDoc.ClassName, UriKind.Relative)
+                };
+                hyperlink.RequestNavigate += Hyperlink_RequestNavigate;
+                classLink.Inlines.Add(hyperlink);
+
+                var classNode = new TreeViewItem { Header = classLink };
+
+                // Add class nodes to the parent node (which could be either the main namespace or a subnamespace)
+                parentNode.Items.Add(classNode);
             }
         }
 
@@ -70,48 +115,28 @@ namespace XmlDocConverter
         {
             foreach (var classDoc in classDocs)
             {
-                // Class Title
-                var classTitle = new TextBlock
-                {
-                    Text = classDoc.ClassName,
-                    FontSize = 20,
-                    FontWeight = FontWeights.Bold,
-                    Margin = new Thickness(0, 10, 0, 5)
-                };
+                var classTitle = ClassTitle(classDoc);
                 contentPanel.Children.Add(classTitle);
                 RegisterName(GenerateValidName(classDoc.ClassName), classTitle);
 
                 // Namespace
                 if (!string.IsNullOrEmpty(classDoc.Namespace))
                 {
-                    var classNamespace = new TextBlock
-                    {
-                        Text = $"Namespace: {classDoc.Namespace}",
-                        FontStyle = FontStyles.Italic,
-                        Margin = new Thickness(0, 0, 0, 5)
-                    };
+                    var classNamespace = ClassNamespace(classDoc);
                     contentPanel.Children.Add(classNamespace);
                 }
 
                 // Summary
                 if (!string.IsNullOrEmpty(classDoc.Summary))
                 {
-                    var classSummary = new TextBlock
-                    {
-                        Text = $"Summary: {classDoc.Summary}",
-                        Margin = new Thickness(0, 0, 0, 5)
-                    };
+                    var classSummary = ClassSummary(classDoc);
                     contentPanel.Children.Add(classSummary);
                 }
 
                 // Remarks
                 if (!string.IsNullOrEmpty(classDoc.Remarks))
                 {
-                    var classRemarks = new TextBlock
-                    {
-                        Text = $"Remarks: {classDoc.Remarks}",
-                        Margin = new Thickness(0, 0, 0, 5)
-                    };
+                    var classRemarks = ClassRemarks(classDoc);
                     contentPanel.Children.Add(classRemarks);
                 }
 
@@ -276,6 +301,46 @@ namespace XmlDocConverter
 
                 contentPanel.Children.Add(new Separator());
             }
+        }
+
+        private TextBlock ClassRemarks(ClassDocumentation classDoc)
+        {
+            return new TextBlock
+            {
+                Text = $"Remarks: {classDoc.Remarks}",
+                Margin = new Thickness(0, 0, 0, 5)
+            };
+        }
+
+        private TextBlock ClassSummary(ClassDocumentation classDoc)
+        {
+            return new TextBlock
+            {
+                Text = $"Summary: {classDoc.Summary}",
+                Margin = new Thickness(0, 0, 0, 5)
+            };
+        }
+
+        private TextBlock ClassTitle(ClassDocumentation classDoc)
+        {
+            // Class Title
+            return new TextBlock
+            {
+                Text = classDoc.ClassName,
+                FontSize = 20,
+                FontWeight = FontWeights.Bold,
+                Margin = new Thickness(0, 10, 0, 5)
+            };
+        }
+
+        private TextBlock ClassNamespace(ClassDocumentation classDoc)
+        {
+            return new TextBlock
+            {
+                Text = $"Namespace: {classDoc.Namespace}",
+                FontStyle = FontStyles.Italic,
+                Margin = new Thickness(0, 0, 0, 5)
+            };
         }
 
         private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
