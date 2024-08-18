@@ -92,7 +92,11 @@ table, th, td {
 
 th, td {
     padding: 10px;
+    max-width: 75ch; /* Limit to approximately 75 characters per line */
     text-align: left;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal; /* Ensure text can wrap to a new line */
 }
 
 th {
